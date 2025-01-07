@@ -8,9 +8,10 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import dayjs from "../../utils/dayjs";
 import ListItemText from "@mui/material/ListItemText";
 import {useQuery} from "@tanstack/react-query";
+import Divider from "@mui/material/Divider";
 
 export const getUpcomingEvents = async () => {
-    const response = await fetch('http://localhost:3000/events', {
+    const response = await fetch('https://legion-events-au-platform-03eeffdb069d.herokuapp.com/events', {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -27,7 +28,7 @@ export default function UpcomingEvents() {
         queryFn: getUpcomingEvents,
     })
 
-    if(data) {
+    if (data) {
         const months = Object.keys(data.events)
 
         return (
@@ -40,17 +41,22 @@ export default function UpcomingEvents() {
                                     {month}
                                 </Typography>
 
-                                <List className="max-w-96 w-full" dense>
+                                <List className="max-w-96 w-full" dense sx={{py: 0}}>
                                     {data.events[month].map(event => (
                                         <ListItem key={event.id}>
                                             <ListItemAvatar>
-                                                <div className={'mr-5'}>
-                                                    <Typography variant="button">
-                                                        {dayjs(event.start_time).format('ddd D')}
-                                                    </Typography>
-                                                </div>
+                                                <ListItemText
+                                                    primary={dayjs(event.start_time).format('ddd D')}
+                                                    slotProps={{primary: {fontSize: 13, fontWeight: 'bold'},}}/>
                                             </ListItemAvatar>
-                                            <ListItemText primary={event.title} secondary={event.promoter}/>
+                                            <ListItemText
+                                                sx={{m: 0}}
+                                                primary={event.title}
+                                                secondary={event.promoter}
+                                                slotProps={{
+                                                    primary: {fontSize: 13, fontWeight: 'medium'},
+                                                    secondary: {fontSize: 11, fontWeight: 'medium'}
+                                                }}/>
                                         </ListItem>
                                     ))}
                                 </List>

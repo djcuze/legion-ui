@@ -11,8 +11,16 @@ import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
 import Button from '@mui/material/Button'
 import dayjs from "../utils/dayjs";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {Alert, IconButton, Snackbar, SnackbarCloseReason} from "@mui/material";
 
 export const EventForm = () => {
+    const [titleError, setTitleError] = useState(true);
+    const [promoterError, setPromoterError] = useState(true);
+    const [isDisabled, setIsDisabled] = useState(true)
+    const [toastNotification, setToastNotification] = React.useState(false);
+    const [toastMessage, setToastMessage] = React.useState("");
+    const [toastSeverity, setToastSeverity] = React.useState("error");
+
     const start_time = dayjs().weekday(5).hour(21).minute(0).second(0)
     const end_time = dayjs().weekday(6).hour(3).minute(0).second(0)
 
@@ -24,8 +32,31 @@ export const EventForm = () => {
     });
     const queryClient = useQueryClient()
 
+    const handleClose = (
+        event: React.SyntheticEvent | Event,
+        reason?: SnackbarCloseReason,
+    ) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setToastNotification(false);
+    };
+
+    const action = (
+        <React.Fragment>
+            <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleClose}
+            >
+            </IconButton>
+        </React.Fragment>
+    );
+
     const addEvent = async (e) => {
-        const response = await fetch('http://localhost:3000/events', {
+        const response = await fetch('https://legion-events-au-platform-03eeffdb069d.herokuapp.com/events', {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
@@ -33,17 +64,59 @@ export const EventForm = () => {
             },
             body: JSON.stringify({event: formData})
         })
-
+        if (!response.ok) {
+            throw new Error()
+        }
         return response.json()
     };
 
     const mutation = useMutation({
         mutationFn: addEvent,
         onSuccess: () => {
+            setToastSeverity("success")
+            setToastMessage("Event created successfully")
+            setToastNotification(true);
+
             queryClient.invalidateQueries({queryKey: ['upcomingEvents']})
         },
+        onError: () => {
+            setToastSeverity("error")
+            setToastMessage("An error occurred")
+            setToastNotification(true);
+        }
     })
 
+    const handleTitleChange = (e) => {
+        setFormData({...formData, title: e.target.value})
+        setIsDisabled(!isFormValid())
+
+        if (e.target.validity.valid) {
+            setTitleError(false);
+        } else {
+            setTitleError(true);
+        }
+    }
+
+    const handlePromoterChange = (e) => {
+        setFormData({...formData, promoter: e.target.value})
+        setIsDisabled(!isFormValid())
+
+        if (e.target.validity.valid) {
+            setPromoterError(false);
+        } else {
+            setPromoterError(true);
+        }
+    }
+
+    function isFormValid() {
+        if (titleError || promoterError) {
+            return false
+        }
+        return true
+    }
+
+    // @ts-ignore
+    // @ts-ignore
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
             <div className="w-full max-w-96 mx-auto">
@@ -55,8 +128,8 @@ export const EventForm = () => {
                                     variant="standard"
                                     label="Title"
                                     placeholder="Title"
-                                    value={formData.title}
-                                    onChange={(e) => setFormData({...formData, title: e.target.value})}
+                                    error={titleError}
+                                    onChange={handleTitleChange}
                                     required
                                 />
                             </FormControl>
@@ -69,7 +142,8 @@ export const EventForm = () => {
                                     label="Promoter"
                                     placeholder="Promoter"
                                     value={formData.promoter}
-                                    onChange={(e) => setFormData({...formData, promoter: e.target.value})}
+                                    error={promoterError}
+                                    onChange={handlePromoterChange}
                                     required
                                 />
                             </FormControl>
@@ -106,9 +180,21 @@ export const EventForm = () => {
                         variant="contained"
                         color="primary"
                         sx={{float: "right", marginTop: 2}}
-                        onClick={() => mutation.mutate(formData)}>
+                        onClick={() => mutation.mutate(formData)}
+                        disabled={isDisabled}
+                    >
                         Submit
                     </Button>
+                    <Snackbar
+                        open={toastNotification}
+                        autoHideDuration={6000}
+                        onClose={handleClose}
+                    >
+                        {/* @ts-ignore */}
+                        <Alert onClose={handleClose} severity={toastSeverity} variant="filled">
+                            {toastMessage}
+                        </Alert>
+                    </Snackbar>
                 </form>
             </div>
         </LocalizationProvider>

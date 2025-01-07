@@ -7,8 +7,9 @@ import {
     QueryClient,
     QueryClientProvider,
 } from '@tanstack/react-query'
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import {AppRouterCacheProvider} from '@mui/material-nextjs/v15-appRouter';
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
+import {createTheme, ThemeProvider} from "@mui/material";
 
 function makeQueryClient() {
     return new QueryClient({
@@ -38,7 +39,13 @@ function getQueryClient() {
     }
 }
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+const theme = createTheme({
+    palette: {
+        mode: 'light',
+    },
+});
+
+export default function Providers({children}: { children: React.ReactNode }) {
     // NOTE: Avoid useState when initializing the query client if you don't
     //       have a suspense boundary between this and the code that may
     //       suspend because React will throw away the client on the initial
@@ -47,10 +54,12 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
     return (
         <AppRouterCacheProvider>
-        <QueryClientProvider client={queryClient}>
-            <ReactQueryDevtools initialIsOpen={false} />
-            {children}
-        </QueryClientProvider>
+            <QueryClientProvider client={queryClient}>
+                <ReactQueryDevtools initialIsOpen={false}/>
+                <ThemeProvider theme={theme}>
+                    {children}
+                </ThemeProvider>
+            </QueryClientProvider>
         </AppRouterCacheProvider>
     )
 }
