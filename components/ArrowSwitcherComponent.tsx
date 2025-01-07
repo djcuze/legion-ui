@@ -9,7 +9,6 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar'
 import { TimeClock } from '@mui/x-date-pickers/TimeClock'
 import Switch from '@mui/material/Switch'
 import Typography from '@mui/material/Typography'
-import dayjs from 'dayjs'
 
 const slots = {
     leftArrowIcon: ArrowLeft,
@@ -18,7 +17,6 @@ const slots = {
 
 export default function ArrowSwitcherComponent ({ formData, setFormData }) {
     const [currentComponent, setCurrentComponent] = React.useState('date')
-
     const [timePeriodIsMorning, setTimePeriodIsMorning] = React.useState(formData.start_time.format('a') === 'am')
 
     const handleCurrentComponentChange = (event, nextCurrentComponent) => {

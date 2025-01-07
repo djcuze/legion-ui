@@ -9,6 +9,8 @@ import dayjs from "../../utils/dayjs";
 import ListItemText from "@mui/material/ListItemText";
 import {useQuery} from "@tanstack/react-query";
 import Divider from "@mui/material/Divider";
+import {CircularProgress} from "@mui/material";
+import Box from "@mui/material/Box";
 
 export const getUpcomingEvents = async () => {
     const response = await fetch('https://legion-events-au-platform-03eeffdb069d.herokuapp.com/events', {
@@ -23,10 +25,24 @@ export const getUpcomingEvents = async () => {
 }
 
 export default function UpcomingEvents() {
-    const {data} = useQuery({
+    const {data, isFetching} = useQuery({
         queryKey: ['upcomingEvents'],
         queryFn: getUpcomingEvents,
     })
+
+    if (isFetching) {
+        return (
+            <Box
+                display="flex"
+                justifyContent="center"
+                flexDirection="column"
+                sx={{height: "200px"}}
+                alignItems="center">
+                <CircularProgress color={"inherit"}/>
+                <Typography sx={{mt: 2}} variant="button">Loading</Typography>
+            </Box>
+        )
+    }
 
     if (data) {
         const months = Object.keys(data.events)

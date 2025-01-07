@@ -1,5 +1,7 @@
 import ".//globals.css";
 import Providers from "./providers";
+import Navbar from "../components/Navbar";
+import Box from "@mui/material/Box";
 
 export const metadata = {
   title: 'Next.js',
@@ -14,7 +16,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="mb-24 bg-white">
-        <Providers>{children}</Providers>
+        <Providers>
+            <Box className="flex flex-col">
+                <Navbar/>
+                <div className="mt-16"/>
+                {children}
+            </Box>
+        </Providers>
       </body>
     </html>
   )

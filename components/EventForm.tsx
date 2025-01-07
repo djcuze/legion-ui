@@ -14,8 +14,8 @@ import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {Alert, IconButton, Snackbar, SnackbarCloseReason} from "@mui/material";
 
 export const EventForm = () => {
-    const [titleError, setTitleError] = useState(true);
-    const [promoterError, setPromoterError] = useState(true);
+    const [titleError, setTitleError] = useState(false);
+    const [promoterError, setPromoterError] = useState(false);
     const [isDisabled, setIsDisabled] = useState(true)
     const [toastNotification, setToastNotification] = React.useState(false);
     const [toastMessage, setToastMessage] = React.useState("");
@@ -42,18 +42,6 @@ export const EventForm = () => {
 
         setToastNotification(false);
     };
-
-    const action = (
-        <React.Fragment>
-            <IconButton
-                size="small"
-                aria-label="close"
-                color="inherit"
-                onClick={handleClose}
-            >
-            </IconButton>
-        </React.Fragment>
-    );
 
     const addEvent = async (e) => {
         const response = await fetch('https://legion-events-au-platform-03eeffdb069d.herokuapp.com/events', {
@@ -115,7 +103,6 @@ export const EventForm = () => {
         return true
     }
 
-    // @ts-ignore
     // @ts-ignore
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
