@@ -10,6 +10,7 @@ import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider'
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
 import Button from '@mui/material/Button'
 import dayjs from "../utils/dayjs";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 
 export const EventForm = () => {
     const start_time = dayjs().weekday(5).hour(21).minute(0).second(0)
@@ -21,19 +22,27 @@ export const EventForm = () => {
         start_time,
         end_time,
     });
+    const queryClient = useQueryClient()
 
-    const handleOnSubmit = async (e) => {
-        e.preventDefault();
-
-        await fetch('https://legion-events-au-platform-03eeffdb069d.herokuapp.com/events', {
+    const addEvent = async (e) => {
+        const response = await fetch('http://localhost:3000/events', {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({event: formData})
-        }).then(res => res.json())
+        })
+
+        return response.json()
     };
+
+    const mutation = useMutation({
+        mutationFn: addEvent,
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['upcomingEvents']})
+        },
+    })
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
@@ -97,7 +106,7 @@ export const EventForm = () => {
                         variant="contained"
                         color="primary"
                         sx={{float: "right", marginTop: 2}}
-                        onClick={handleOnSubmit}>
+                        onClick={() => mutation.mutate(formData)}>
                         Submit
                     </Button>
                 </form>
