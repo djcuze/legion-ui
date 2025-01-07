@@ -13,8 +13,10 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import legionLogo from "../public/legionLogo.png"
+import Image from "next/image";
+import Link from "next/link";
 
 interface Props {
     /**
@@ -25,7 +27,7 @@ interface Props {
 }
 
 const drawerWidth = 240;
-const navItems = [];
+const navItems = [{title: "Home", href: "/"}];
 
 export default function Navbar(props: Props) {
     const {window} = props;
@@ -37,15 +39,19 @@ export default function Navbar(props: Props) {
 
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{textAlign: 'center'}}>
-            <Typography variant="h6" sx={{my: 2}}>
-                Bass Promoters BNE/GC/SC
-            </Typography>
+
+            <Box className="w-full max-w-24">
+                <Image src={legionLogo} alt={"Legion logo"}/>
+            </Box>
+
             <Divider/>
             <List>
                 {navItems.map((item) => (
-                    <ListItem key={item} disablePadding>
+                    <ListItem key={item.title} disablePadding>
                         <ListItemButton sx={{textAlign: 'center'}}>
-                            <ListItemText primary={item}/>
+                            <Link href={item.href}>
+                                <ListItemText primary={item.title}/>
+                            </Link>
                         </ListItemButton>
                     </ListItem>
                 ))}
@@ -60,26 +66,16 @@ export default function Navbar(props: Props) {
             <CssBaseline/>
             <AppBar component="nav">
                 <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        edge="start"
-                        onClick={handleDrawerToggle}
-                        sx={{mr: 2, display: {sm: 'none'}}}
-                    >
-                        <MenuIcon/>
-                    </IconButton>
-                    <Typography
-                        variant="h6"
-                        component="div"
-                        sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
-                    >
-                        Bass Promoters BNE/GC/SC
-                    </Typography>
+                    <Box className="w-full max-w-24 mr-3">
+                        <Image src={legionLogo} alt={"Legion logo"}/>
+                    </Box>
+
                     <Box sx={{display: {xs: 'none', sm: 'block'}}}>
                         {navItems.map((item) => (
-                            <Button key={item} sx={{color: '#fff'}}>
-                                {item}
+                            <Button key={item.title} sx={{color: '#fff'}}>
+                                <Link href={item.href}>
+                                    {item.title}
+                                </Link>
                             </Button>
                         ))}
                     </Box>

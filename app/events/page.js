@@ -9,6 +9,7 @@ import {
 } from '@tanstack/react-query'
 import UpcomingEvents, { getUpcomingEvents } from './upcomingEvents'
 import { Alert } from '@mui/material'
+import Box from '@mui/material/Box'
 
 export default async function Events () {
   const queryClient = new QueryClient()
@@ -20,17 +21,15 @@ export default async function Events () {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Alert severity="warning">
-        This page is under development. Please report all issues and feedback to the FB group
-      </Alert>
+      <Box sx={{mt: 2}}>
+        <UpcomingEvents/>
 
-      <UpcomingEvents/>
+        <Divider className="font-sans">
+          <Chip label="Register an event"/>
+        </Divider>
 
-      <Divider className="font-sans">
-        <Chip label="Register an event"/>
-      </Divider>
-
-      <EventForm/>
+        <EventForm/>
+      </Box>
     </HydrationBoundary>
   )
 }
