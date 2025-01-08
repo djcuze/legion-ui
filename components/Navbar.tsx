@@ -13,7 +13,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 import Link from "next/link";
 import Image from "next/image";
 import legionLogo from "../public/legionLogo.png"
@@ -24,13 +23,11 @@ const pages = [
     {title: "Events", href: "/events"}
 ];
 
-function ResponsiveAppBar() {
+function ResponsiveAppBar({isLoggedIn}) {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
-    const loggedIn = true
-
-    const settings = loggedIn ? [
+    const settings = isLoggedIn ? [
         {label: "Profile", onClick: () => navigate("/profile")},
         {label: "Logout", onClick: logOut}
     ] : [
@@ -45,6 +42,7 @@ function ResponsiveAppBar() {
         })
 
         if (response.ok) {
+            await setCookie("authorization", null)
             await navigate("/login")
         }
     }
@@ -118,7 +116,9 @@ function ResponsiveAppBar() {
                                 onClick={handleCloseNavMenu}
                                 sx={{my: 2, color: 'white', display: 'block'}}
                             >
-                                {page.title}
+                                <Link href={page.href}>
+                                    {page.title}
+                                </Link>
                             </Button>
                         ))}
                     </Box>

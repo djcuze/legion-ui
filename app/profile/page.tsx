@@ -1,5 +1,7 @@
+import Profile from "./ProfileDetail";
+
 export default function Page() {
     return (
-        <div/>
+       <Profile/>
     )
 }

@@ -26,3 +26,13 @@ export async function getHeaders() {
         'Authorization': token ? token.value : ""
     }
 }
+
+export const getCurrentUser = async () => {
+    const headers = await getHeaders()
+
+    const response = await fetch('http://localhost:3000/session/user', {
+        method: "GET",
+        headers: headers
+    })
+    return response.json()
+}

@@ -7,9 +7,8 @@ import {
     type AuthResponse,
 } from '@toolpad/core/SignInPage';
 import {useTheme} from '@mui/material/styles';
-import {getCookie, getHeaders, navigate, setCookie} from "../actions";
+import {getHeaders, navigate, setCookie} from "../actions";
 import {useSnackbar} from "notistack";
-import {useEffect} from "react";
 
 const providers = [{id: 'credentials', name: 'Email and password'}];
 

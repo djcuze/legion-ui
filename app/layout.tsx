@@ -3,6 +3,8 @@ import Providers from "./providers";
 import Navbar from "../components/Navbar";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import {getCookie} from "./actions";
+import {use} from "react";
 
 export const metadata = {
   title: 'Next.js',
@@ -15,6 +17,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
 
+    async function loggedIn() {
+        const cookie = await getCookie('authorization');
+
+        return !!cookie?.value
+    }
+
     return (
     <html lang="en">
     <head>
@@ -23,7 +31,7 @@ export default function RootLayout({
     <body className="mb-24 bg-white">
     <Providers>
         <Box className="flex flex-col">
-            <Navbar/>
+            <Navbar isLoggedIn={use(loggedIn())}/>
             {children}
         </Box>
     </Providers>

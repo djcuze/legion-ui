@@ -13,11 +13,12 @@ import dayjs from "../utils/dayjs";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {getHeaders} from "../app/actions";
 import {useSnackbar} from "notistack";
+import useCurrentUser from "../hooks/useCurrentUser";
 
 export const EventForm = () => {
     const {enqueueSnackbar} = useSnackbar();
+    const {data: currentUser} = useCurrentUser()
     const [titleError, setTitleError] = useState(false);
-    const [promoterError, setPromoterError] = useState(false);
     const [isDisabled, setIsDisabled] = useState(true)
 
     const start_time = dayjs().weekday(5).hour(21).minute(0).second(0)
@@ -25,7 +26,6 @@ export const EventForm = () => {
 
     const [formData, setFormData] = useState({
         title: "",
-        promoter: "",
         start_time,
         end_time,
     });
@@ -51,7 +51,7 @@ export const EventForm = () => {
             queryClient.invalidateQueries({queryKey: ['upcomingEvents']})
         },
         onError: () => {
-            enqueueSnackbar("An error occurred", {variant: "success", autoHideDuration: 2700})
+            enqueueSnackbar("An error occurred", {variant: "error", autoHideDuration: 2700})
         }
     })
 
@@ -66,19 +66,8 @@ export const EventForm = () => {
         }
     }
 
-    const handlePromoterChange = (e) => {
-        setFormData({...formData, promoter: e.target.value})
-        setIsDisabled(!isFormValid())
-
-        if (e.target.validity.valid) {
-            setPromoterError(false);
-        } else {
-            setPromoterError(true);
-        }
-    }
-
     function isFormValid() {
-        if (titleError || promoterError) {
+        if (titleError) {
             return false
         }
         return true
@@ -107,11 +96,8 @@ export const EventForm = () => {
                             <FormControl variant="standard" sx={{width: "100%"}}>
                                 <TextField
                                     variant="standard"
-                                    label="Promoter"
-                                    placeholder="Promoter"
-                                    value={formData.promoter}
-                                    error={promoterError}
-                                    onChange={handlePromoterChange}
+                                    defaultValue={currentUser?.promoter || "Promoter *"}
+                                    disabled
                                     required
                                 />
                             </FormControl>
