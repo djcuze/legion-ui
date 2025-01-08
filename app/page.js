@@ -9,9 +9,9 @@ import InstagramIcon from '@mui/icons-material/Instagram'
 import { IconButton } from '@mui/material'
 import heroImage from '../public/heroImage.jpg'
 
-export default function Home () {
+export default function Home() {
   return (
-    <Box className="flex flex-col items-center">
+    <Box className="flex flex-col items-center mt-14">
       <Image src={heroImage} alt=""/>
 
       <Box sx={{px: 1}} className="flex flex-col items-center w-full">

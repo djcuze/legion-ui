@@ -14,7 +14,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  return (
+
+    return (
     <html lang="en">
     <head>
         <title>Legion Events</title>
@@ -23,7 +24,6 @@ export default function RootLayout({
     <Providers>
         <Box className="flex flex-col">
             <Navbar/>
-            <div className="mt-14"/>
             {children}
         </Box>
     </Providers>

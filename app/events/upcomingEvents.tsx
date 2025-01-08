@@ -11,14 +11,13 @@ import {useQuery} from "@tanstack/react-query";
 import Divider from "@mui/material/Divider";
 import {CircularProgress} from "@mui/material";
 import Box from "@mui/material/Box";
+import {getCookie, getHeaders} from "../actions";
 
 export const getUpcomingEvents = async () => {
-    const response = await fetch('https://legion-events-au-platform-03eeffdb069d.herokuapp.com/events', {
+    const headers = await getHeaders()
+    const response = await fetch('http://localhost:3000/events', {
         method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
+        headers: headers
     })
 
     return response.json()

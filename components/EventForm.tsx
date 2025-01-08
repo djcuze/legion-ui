@@ -11,15 +11,14 @@ import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
 import Button from '@mui/material/Button'
 import dayjs from "../utils/dayjs";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {Alert, IconButton, Snackbar, SnackbarCloseReason} from "@mui/material";
+import {getHeaders} from "../app/actions";
+import {useSnackbar} from "notistack";
 
 export const EventForm = () => {
+    const {enqueueSnackbar} = useSnackbar();
     const [titleError, setTitleError] = useState(false);
     const [promoterError, setPromoterError] = useState(false);
     const [isDisabled, setIsDisabled] = useState(true)
-    const [toastNotification, setToastNotification] = React.useState(false);
-    const [toastMessage, setToastMessage] = React.useState("");
-    const [toastSeverity, setToastSeverity] = React.useState("error");
 
     const start_time = dayjs().weekday(5).hour(21).minute(0).second(0)
     const end_time = dayjs().weekday(6).hour(3).minute(0).second(0)
@@ -32,24 +31,11 @@ export const EventForm = () => {
     });
     const queryClient = useQueryClient()
 
-    const handleClose = (
-        event: React.SyntheticEvent | Event,
-        reason?: SnackbarCloseReason,
-    ) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setToastNotification(false);
-    };
-
     const addEvent = async (e) => {
-        const response = await fetch('https://legion-events-au-platform-03eeffdb069d.herokuapp.com/events', {
+        const headers = await getHeaders()
+        const response = await fetch('http://localhost:3000/events', {
             method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
+            headers: headers,
             body: JSON.stringify({event: formData})
         })
         if (!response.ok) {
@@ -61,16 +47,11 @@ export const EventForm = () => {
     const mutation = useMutation({
         mutationFn: addEvent,
         onSuccess: () => {
-            setToastSeverity("success")
-            setToastMessage("Event created successfully")
-            setToastNotification(true);
-
+            enqueueSnackbar("Event created successfully", {variant: "success", autoHideDuration: 2700})
             queryClient.invalidateQueries({queryKey: ['upcomingEvents']})
         },
         onError: () => {
-            setToastSeverity("error")
-            setToastMessage("An error occurred")
-            setToastNotification(true);
+            enqueueSnackbar("An error occurred", {variant: "success", autoHideDuration: 2700})
         }
     })
 
@@ -106,7 +87,7 @@ export const EventForm = () => {
     // @ts-ignore
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-            <div className="w-full max-w-96 mx-auto">
+            <div className="w-full max-w-96 mx-auto px-3">
                 <form>
                     <Grid container spacing={4}>
                         <Grid item xs={12}>
@@ -160,28 +141,17 @@ export const EventForm = () => {
                                 </div>
                             </div>
                             <ArrowSwitcherComponent formData={formData} setFormData={setFormData}/>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{float: "right", marginTop: 2, marginBottom: 8}}
+                                onClick={() => mutation.mutate(formData)}
+                                disabled={isDisabled}
+                            >
+                                Submit
+                            </Button>
                         </Grid>
                     </Grid>
-
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{float: "right", marginTop: 2}}
-                        onClick={() => mutation.mutate(formData)}
-                        disabled={isDisabled}
-                    >
-                        Submit
-                    </Button>
-                    <Snackbar
-                        open={toastNotification}
-                        autoHideDuration={6000}
-                        onClose={handleClose}
-                    >
-                        {/* @ts-ignore */}
-                        <Alert onClose={handleClose} severity={toastSeverity} variant="filled">
-                            {toastMessage}
-                        </Alert>
-                    </Snackbar>
                 </form>
             </div>
         </LocalizationProvider>

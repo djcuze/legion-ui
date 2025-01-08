@@ -10,6 +10,7 @@ import {
 import {AppRouterCacheProvider} from '@mui/material-nextjs/v15-appRouter';
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import {createTheme, ThemeProvider} from "@mui/material";
+import {SnackbarProvider} from "notistack";
 
 function makeQueryClient() {
     return new QueryClient({
@@ -57,7 +58,9 @@ export default function Providers({children}: { children: React.ReactNode }) {
             <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools initialIsOpen={false}/>
                 <ThemeProvider theme={theme}>
-                    {children}
+                    <SnackbarProvider maxSnack={1}>
+                        {children}
+                    </SnackbarProvider>
                 </ThemeProvider>
             </QueryClientProvider>
         </AppRouterCacheProvider>
