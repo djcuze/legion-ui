@@ -8,7 +8,7 @@ import {
   QueryClient,
 } from '@tanstack/react-query'
 import UpcomingEvents, { getUpcomingEvents } from './upcomingEvents'
-import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
 
 export default async function Events () {
   const queryClient = new QueryClient()
@@ -20,15 +20,16 @@ export default async function Events () {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Box sx={{mt: 10}}>
+      <Container sx={{mt: 10, mb: 8}}>
+
         <UpcomingEvents/>
 
-        <Divider className="font-sans">
-          <Chip label="Register an event"/>
+        <Divider className="font-sans" sx={{mt: 3}}>
+          <Chip color="primary" label="Register an event"/>
         </Divider>
 
         <EventForm/>
-      </Box>
+      </Container>
     </HydrationBoundary>
   )
 }

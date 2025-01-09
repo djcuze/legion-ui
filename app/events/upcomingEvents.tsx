@@ -8,11 +8,10 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import dayjs from "../../utils/dayjs";
 import ListItemText from "@mui/material/ListItemText";
 import {useQuery} from "@tanstack/react-query";
-import Divider from "@mui/material/Divider";
-import {CircularProgress} from "@mui/material";
-import Box from "@mui/material/Box";
-import {getCookie, getHeaders} from "../actions";
+import {getHeaders} from "../actions";
 import Loading from "../../components/Loading";
+import Avatar from "@mui/material/Avatar";
+import * as React from "react";
 
 export const getUpcomingEvents = async () => {
     const headers = await getHeaders()
@@ -38,8 +37,9 @@ export default function UpcomingEvents() {
         const months = Object.keys(data.events)
 
         return (
-            <div className="mt-1 px-5">
-                <Grid container spacing={2}>
+            <>
+                <Typography variant="overline">Events</Typography>
+                <Grid container spacing={3}>
                     {months.map((month, index) => (
                         <Grid key={month}>
                             <div key={month}>
@@ -47,18 +47,25 @@ export default function UpcomingEvents() {
                                     {month}
                                 </Typography>
 
-                                <List className="max-w-96 w-full" dense sx={{py: 0}}>
+                                <List className="w-full" dense>
                                     {data.events[month].map(event => (
-                                        <ListItem key={event.id}>
-                                            <ListItemAvatar>
+                                        <ListItem key={event.id} sx={{px: 0}} alignItems="flex-start">
+                                            <ListItemAvatar sx={{margin: 0}}>
                                                 <ListItemText
                                                     primary={dayjs(event.start_time).format('ddd D')}
                                                     slotProps={{primary: {fontSize: 13, fontWeight: 'bold'},}}/>
                                             </ListItemAvatar>
+
+                                            <Avatar
+                                                alt={event.promoter.name}
+                                                src={event.promoter.avatar_url}
+                                                sx={{width: 28, height: 28, mr: 1}}
+                                            />
+
                                             <ListItemText
-                                                sx={{m: 0}}
+                                                sx={{m: 0, maxWidth: "250px"}}
                                                 primary={event.title}
-                                                secondary={event.promoter}
+                                                secondary={event.promoter.name}
                                                 slotProps={{
                                                     primary: {fontSize: 13, fontWeight: 'medium'},
                                                     secondary: {fontSize: 11, fontWeight: 'medium'}
@@ -70,7 +77,7 @@ export default function UpcomingEvents() {
                         </Grid>
                     ))}
                 </Grid>
-            </div>
+            </>
         )
     }
 }

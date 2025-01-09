@@ -14,6 +14,7 @@ import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {getHeaders} from "../app/actions";
 import {useSnackbar} from "notistack";
 import useCurrentUser from "../hooks/useCurrentUser";
+import Tooltip from "@mui/material/Tooltip";
 
 export const EventForm = () => {
     const {enqueueSnackbar} = useSnackbar();
@@ -33,15 +34,17 @@ export const EventForm = () => {
 
     const addEvent = async (e) => {
         const headers = await getHeaders()
-        const response = await fetch('http://localhost:3000/events', {
+        await fetch('http://localhost:3000/events', {
             method: "POST",
             headers: headers,
             body: JSON.stringify({event: formData})
+        }).then(resp => {
+            if (!resp.ok) {
+                return resp.json().then(err => {throw new Error(err.message)})
+            } else {
+                return resp.json()
+            }
         })
-        if (!response.ok) {
-            throw new Error()
-        }
-        return response.json()
     };
 
     const mutation = useMutation({
@@ -50,27 +53,19 @@ export const EventForm = () => {
             enqueueSnackbar("Event created successfully", {variant: "success", autoHideDuration: 2700})
             queryClient.invalidateQueries({queryKey: ['upcomingEvents']})
         },
-        onError: () => {
-            enqueueSnackbar("An error occurred", {variant: "error", autoHideDuration: 2700})
+        onError: (error) => {
+            enqueueSnackbar(error.message, {variant: "error", autoHideDuration: 2700})
         }
     })
 
-    const handleTitleChange = (e) => {
+    const handleOnInput = (e) => {
         setFormData({...formData, title: e.target.value})
-        setIsDisabled(!isFormValid())
 
-        if (e.target.validity.valid) {
-            setTitleError(false);
+        if (e.target.value.length >= 4) {
+            setIsDisabled(false)
         } else {
-            setTitleError(true);
+            setIsDisabled(true)
         }
-    }
-
-    function isFormValid() {
-        if (titleError) {
-            return false
-        }
-        return true
     }
 
     // @ts-ignore
@@ -85,8 +80,13 @@ export const EventForm = () => {
                                     variant="standard"
                                     label="Title"
                                     placeholder="Title"
+                                    onChange={handleOnInput}
                                     error={titleError}
-                                    onChange={handleTitleChange}
+                                    slotProps={{
+                                        htmlInput: {
+                                            minLength: 5,
+                                        }
+                                    }}
                                     required
                                 />
                             </FormControl>
@@ -94,12 +94,29 @@ export const EventForm = () => {
 
                         <Grid item xs={12}>
                             <FormControl variant="standard" sx={{width: "100%"}}>
-                                <TextField
-                                    variant="standard"
-                                    defaultValue={currentUser?.promoter || "Promoter *"}
-                                    disabled
-                                    required
-                                />
+                                <Tooltip
+                                    placement="top"
+                                    arrow
+                                    slotProps={{
+                                        popper: {
+                                            modifiers: [
+                                                {
+                                                    name: 'offset',
+                                                    options: {
+                                                        offset: [0, -14],
+                                                    },
+                                                },
+                                            ],
+                                        },
+                                    }}
+                                    title="You cannot create an event for a different promoter">
+                                    <TextField
+                                        variant="standard"
+                                        defaultValue={currentUser?.promoter || "Promoter *"}
+                                        disabled
+                                        required
+                                    />
+                                </Tooltip>
                             </FormControl>
                         </Grid>
 

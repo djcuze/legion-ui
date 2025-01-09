@@ -62,7 +62,7 @@ export default function Network() {
 
             <List sx={{width: '100%', maxWidth: 360, bgcolor: 'background.paper'}}>
                 {data.promoters.map((item) => (
-                    <ListItem key={item.id}>
+                    <ListItem key={item.id} sx={{px: 0}}>
                         <ListItemAvatar>
                             <Avatar alt={item.name} src={item.avatar_url}/>
                         </ListItemAvatar>

@@ -8,6 +8,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
 import useCurrentUser from "../../hooks/useCurrentUser";
+import AvatarUpload from "../avatar/AvatarUpload";
+import Divider from "@mui/material/Divider";
+import Avatar from "@mui/material/Avatar";
 
 function ProfileDetail({label, value}) {
     return (
@@ -36,15 +39,39 @@ export default function Profile() {
 
     return (
         <Container sx={{mt: 10, mb: 8}}>
-            <Box>
-                <Typography variant="h4">Profile</Typography>
-            </Box>
+            <Typography variant="overline">Profile</Typography>
+            <Box sx={{maxWidth: 500, width: "100%"}}>
+                <Box>
+                    <Typography variant="h5">User details</Typography>
+                </Box>
 
-            <List sx={{maxWidth: "500px"}}>
-                <ProfileDetail label={"Name"} value={data.name} key={data.name}/>
-                <ProfileDetail label={"Email address"} value={data.email_address} key={data.email_address}/>
-                <ProfileDetail label={"Promoter"} value={data.promoter} key={data.promoter}/>
-            </List>
+                <List>
+                    <ProfileDetail label={"Name"} value={data.name} key={data.name}/>
+                    <ProfileDetail label={"Email address"} value={data.email_address} key={data.email_address}/>
+                </List>
+
+                <Divider sx={{mb: 3}}/>
+
+                <Box>
+                    <Typography variant="h5">Promoter details</Typography>
+                </Box>
+
+                <List>
+                    <ProfileDetail label={"Name"} value={data.promoter} key={data.promoter}/>
+                    <ListItem>
+                        <ListItemText
+                            sx={{width: "50%"}}
+                            primary={"Profile image"}
+                            slotProps={{primary: {fontSize: 13, fontWeight: 'bold'}}}/>
+
+                        <Box sx={{width: "50%"}} className="flex gap-3">
+                            <Avatar src={data.avatar_url}/>
+                            <AvatarUpload/>
+                        </Box>
+                    </ListItem>
+                </List>
+
+            </Box>
         </Container>
     )
 }
