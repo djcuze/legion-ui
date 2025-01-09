@@ -15,6 +15,8 @@ import {getHeaders} from "../app/actions";
 import {useSnackbar} from "notistack";
 import useCurrentUser from "../hooks/useCurrentUser";
 import Tooltip from "@mui/material/Tooltip";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
 
 export const EventForm = () => {
     const {enqueueSnackbar} = useSnackbar();
@@ -71,9 +73,10 @@ export const EventForm = () => {
     // @ts-ignore
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-            <div className="w-full max-w-96 mx-auto px-3">
+            <Box className="w-full max-w-96 mx-auto" sx={{mt: 5}}>
                 <form>
-                    <Grid container spacing={4}>
+                    <Card sx={{p: 2}}>
+                        <Grid container spacing={4}>
                         <Grid item xs={12}>
                             <FormControl variant="standard" sx={{width: "100%"}}>
                                 <TextField
@@ -112,6 +115,7 @@ export const EventForm = () => {
                                     title="You cannot create an event for a different promoter">
                                     <TextField
                                         variant="standard"
+                                        sx={{input: {cursor: "not-allowed"}}}
                                         defaultValue={currentUser?.promoter || "Promoter *"}
                                         disabled
                                         required
@@ -147,7 +151,7 @@ export const EventForm = () => {
                             <Button
                                 variant="contained"
                                 color="primary"
-                                sx={{float: "right", marginTop: 2, marginBottom: 8}}
+                                sx={{float: "right", mt: 2}}
                                 onClick={() => mutation.mutate(formData)}
                                 disabled={isDisabled}
                             >
@@ -155,8 +159,9 @@ export const EventForm = () => {
                             </Button>
                         </Grid>
                     </Grid>
+                    </Card>
                 </form>
-            </div>
+            </Box>
         </LocalizationProvider>
     );
 };

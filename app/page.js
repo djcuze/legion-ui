@@ -8,10 +8,11 @@ import FacebookIcon from '@mui/icons-material/Facebook'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import { IconButton } from '@mui/material'
 import heroImage from '../public/heroImage.jpg'
+import Card from '@mui/material/Card'
 
 export default function Home() {
   return (
-    <Box className="flex flex-col items-center mt-14">
+    <Card className="flex flex-col items-center" sx={{mt: 8, pb: 5, mb: 8}}>
       <Image src={heroImage} alt=""/>
 
       <Box sx={{px: 1}} className="flex flex-col items-center w-full">
@@ -23,7 +24,7 @@ export default function Home() {
           Follow us on socials:
         </Typography>
 
-        <Box className="flex flex-row items-center" sx={{ mb: 10 }}>
+        <Box className="flex flex-row items-center">
           <IconButton onClick={() => redirect('https://www.facebook.com/people/Legion-Events/61551102083573/', 'push')}>
             <FacebookIcon/>
           </IconButton>
@@ -32,6 +33,6 @@ export default function Home() {
           </IconButton>
         </Box>
       </Box>
-    </Box>
+    </Card>
   )
 }

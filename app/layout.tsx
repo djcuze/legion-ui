@@ -28,11 +28,13 @@ export default function RootLayout({
     <head>
         <title>Legion Events</title>
     </head>
-    <body className="mb-24 bg-white">
+    <body className="mb-24 bg-[#fafafa]">
     <Providers>
         <Box className="flex flex-col">
             <Navbar isLoggedIn={use(loggedIn())}/>
-            {children}
+            <Box className={"max-w-[1200px] mx-auto w-full"}>
+                {children}
+            </Box>
         </Box>
     </Providers>
     <footer>

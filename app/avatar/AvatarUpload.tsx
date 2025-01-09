@@ -8,6 +8,7 @@ import {getHeaders} from "../actions";
 import {useQueryClient} from "@tanstack/react-query";
 import {enqueueSnackbar} from "notistack";
 import LoadingButton from "@mui/lab/LoadingButton";
+import useCurrentUser from "../../hooks/useCurrentUser";
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -24,7 +25,7 @@ const VisuallyHiddenInput = styled('input')({
 export default function AvatarUpload() {
     const [isLoading, setIsLoading] = useState(false);
     const queryClient = useQueryClient()
-
+    const {data: currentUser} = useCurrentUser()
     async function handleFileUpload(event) {
         const headers = await getHeaders()
 
@@ -41,8 +42,8 @@ export default function AvatarUpload() {
             {
                 method: 'POST',
                 body: file,
-            },
-        );
+            }
+        )
 
         const newBlob = (await response.json()) as PutBlobResult;
 

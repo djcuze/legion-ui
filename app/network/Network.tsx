@@ -13,6 +13,8 @@ import {getCookie, getHeaders, navigate} from "../actions";
 import {useQuery} from "@tanstack/react-query";
 import Loading from "../../components/Loading";
 import * as React from "react";
+import Card from "@mui/material/Card";
+import Divider from "@mui/material/Divider";
 
 const getNetworkPromoters = async (networkId) => {
     const headers = await getHeaders()
@@ -55,21 +57,24 @@ export default function Network() {
 
     return (
         <Container sx={{mt: 10, mb: 8}}>
-            <Box>
-                <Typography variant="overline">Network</Typography>
-                <Typography variant="h5">{data.network.name}</Typography>
-            </Box>
+            <Typography variant="overline">Network</Typography>
 
-            <List sx={{width: '100%', maxWidth: 360, bgcolor: 'background.paper'}}>
-                {data.promoters.map((item) => (
-                    <ListItem key={item.id} sx={{px: 0}}>
-                        <ListItemAvatar>
-                            <Avatar alt={item.name} src={item.avatar_url}/>
-                        </ListItemAvatar>
-                        <ListItemText primary={item.name}/>
-                    </ListItem>
-                ))}
-            </List>
+            <Card sx={{p: 2}}>
+                <Typography variant="h5" fontWeight={"bold"}>{data.network.name}</Typography>
+
+                <Divider sx={{mt: 1, mb: 1}}/>
+
+                <List sx={{width: '100%', maxWidth: 360, bgcolor: 'background.paper'}}>
+                    {data.promoters.map((item) => (
+                        <ListItem key={item.id} sx={{px: 0}}>
+                            <ListItemAvatar>
+                                <Avatar alt={item.name} src={item.avatar_url}/>
+                            </ListItemAvatar>
+                            <ListItemText primary={item.name}/>
+                        </ListItem>
+                    ))}
+                </List>
+            </Card>
         </Container>
     )
 }

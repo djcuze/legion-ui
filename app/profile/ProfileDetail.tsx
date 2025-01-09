@@ -11,6 +11,7 @@ import useCurrentUser from "../../hooks/useCurrentUser";
 import AvatarUpload from "../avatar/AvatarUpload";
 import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
+import Card from "@mui/material/Card";
 
 function ProfileDetail({label, value}) {
     return (
@@ -40,7 +41,8 @@ export default function Profile() {
     return (
         <Container sx={{mt: 10, mb: 8}}>
             <Typography variant="overline">Profile</Typography>
-            <Box sx={{maxWidth: 500, width: "100%"}}>
+
+            <Card sx={{maxWidth: 500, width: "100%", p: 2}}>
                 <Box>
                     <Typography variant="h5">User details</Typography>
                 </Box>
@@ -71,7 +73,7 @@ export default function Profile() {
                     </ListItem>
                 </List>
 
-            </Box>
+            </Card>
         </Container>
     )
 }
