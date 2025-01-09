@@ -33,7 +33,7 @@ export default function RegisterForm(){
     };
 
     async function registerAccount() {
-        const response = await fetch('https://legion-events-au-platform-03eeffdb069d.herokuapp.com/register', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
             method: "POST",
             headers: {
                 'Accept': 'application/json',

@@ -30,7 +30,7 @@ export async function getHeaders() {
 export const getCurrentUser = async () => {
     const headers = await getHeaders()
 
-    const response = await fetch('https://legion-events-au-platform-03eeffdb069d.herokuapp.com/session/user', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/session/user`, {
         method: "GET",
         headers: headers
     })

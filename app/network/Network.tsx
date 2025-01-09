@@ -16,9 +16,9 @@ import * as React from "react";
 import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
 
-const getNetworkPromoters = async (networkId) => {
+export const getNetworkPromoters = async (networkId) => {
     const headers = await getHeaders()
-    const response = await fetch(`https://legion-events-au-platform-03eeffdb069d.herokuapp.com/networks/${networkId}/promoters`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/networks/${networkId}/promoters`, {
         method: 'GET',
         headers: headers
     })

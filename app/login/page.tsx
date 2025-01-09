@@ -25,7 +25,7 @@ export default function NotificationsSignInPageError() {
             const password = formData.get('password');
             const headers = await getHeaders()
 
-            const response = await fetch('https://legion-events-au-platform-03eeffdb069d.herokuapp.com/session', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/session`, {
                 method: "POST",
                 headers: headers,
                 body: JSON.stringify({email_address, password})

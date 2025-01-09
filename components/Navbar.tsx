@@ -41,7 +41,7 @@ function ResponsiveAppBar({isLoggedIn}) {
 
     async function logOut() {
         const headers = await getHeaders()
-        const response = await fetch('https://legion-events-au-platform-03eeffdb069d.herokuapp.com/session', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/session`, {
             method: "DELETE",
             headers: headers
         })

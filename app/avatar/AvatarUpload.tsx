@@ -47,7 +47,7 @@ export default function AvatarUpload() {
 
         const newBlob = (await response.json()) as PutBlobResult;
 
-        const updateProfileResponse = await fetch("https://legion-events-au-platform-03eeffdb069d.herokuapp.com/promoters/update_avatar", {
+        const updateProfileResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/promoters/update_avatar`, {
             method: "PUT",
             headers: headers,
             body: JSON.stringify({avatar_url: newBlob.url})

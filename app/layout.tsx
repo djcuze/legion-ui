@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {getCookie} from "./actions";
-import {use} from "react";
+import '../envConfig.js'
 
 export const metadata = {
   title: 'Next.js',

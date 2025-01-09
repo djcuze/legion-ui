@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import FormControl from "@mui/material/FormControl";
@@ -17,6 +17,40 @@ import useCurrentUser from "../hooks/useCurrentUser";
 import Tooltip from "@mui/material/Tooltip";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
+import InputLabel from "@mui/material/InputLabel";
+import NativeSelect from "@mui/material/NativeSelect";
+import {getNetworkPromoters} from "../app/network/Network";
+
+function PromoterOptions({networkId}) {
+    const [promoterOptions, setPromoterOptions] = useState([]);
+
+    useEffect(() => {
+        getNetworkPromoters(networkId)
+            .then(data => {
+                setPromoterOptions(
+                    data.promoters.map((promoter) => ({value: promoter.id, label: promoter.name}))
+                );
+            })
+    }, [networkId]);
+
+
+    return (
+        <>
+            <option/>
+            {promoterOptions.length > 0 && promoterOptions.map((promoterOption, index) => (
+                <option
+                    key={index}
+                    // @ts-ignore
+                    value={promoterOption.value}>
+                    {
+                        // @ts-ignore
+                        promoterOption.label
+                    }
+                </option>
+            ))}
+        </>
+    )
+}
 
 export const EventForm = () => {
     const {enqueueSnackbar} = useSnackbar();
@@ -29,6 +63,7 @@ export const EventForm = () => {
 
     const [formData, setFormData] = useState({
         title: "",
+        promoter_id: "",
         start_time,
         end_time,
     });
@@ -36,13 +71,15 @@ export const EventForm = () => {
 
     const addEvent = async (e) => {
         const headers = await getHeaders()
-        await fetch('https://legion-events-au-platform-03eeffdb069d.herokuapp.com/events', {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events`, {
             method: "POST",
             headers: headers,
             body: JSON.stringify({event: formData})
         }).then(resp => {
             if (!resp.ok) {
-                return resp.json().then(err => {throw new Error(err.message)})
+                return resp.json().then(err => {
+                    throw new Error(err.message)
+                })
             } else {
                 return resp.json()
             }
@@ -61,7 +98,11 @@ export const EventForm = () => {
     })
 
     const handleOnInput = (e) => {
-        setFormData({...formData, title: e.target.value})
+        setFormData({...formData, [e.target.name]: e.target.value})
+
+        if (e.target.name !== "title") {
+            return
+        }
 
         if (e.target.value.length >= 4) {
             setIsDisabled(false)
@@ -77,88 +118,85 @@ export const EventForm = () => {
                 <form>
                     <Card sx={{p: 2}}>
                         <Grid container spacing={4}>
-                        <Grid item xs={12}>
-                            <FormControl variant="standard" sx={{width: "100%"}}>
-                                <TextField
-                                    variant="standard"
-                                    label="Title"
-                                    placeholder="Title"
-                                    onChange={handleOnInput}
-                                    error={titleError}
-                                    slotProps={{
-                                        htmlInput: {
-                                            minLength: 5,
-                                        }
-                                    }}
-                                    required
-                                />
-                            </FormControl>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                            <FormControl variant="standard" sx={{width: "100%"}}>
-                                <Tooltip
-                                    placement="top"
-                                    arrow
-                                    slotProps={{
-                                        popper: {
-                                            modifiers: [
-                                                {
-                                                    name: 'offset',
-                                                    options: {
-                                                        offset: [0, -14],
-                                                    },
-                                                },
-                                            ],
-                                        },
-                                    }}
-                                    title="You cannot create an event for a different promoter">
+                            <Grid item xs={12}>
+                                <FormControl variant="standard" sx={{width: "100%"}}>
                                     <TextField
                                         variant="standard"
-                                        sx={{input: {cursor: "not-allowed"}}}
-                                        defaultValue={currentUser?.promoter || "Promoter *"}
-                                        disabled
+                                        label="Title"
+                                        placeholder="Title"
+                                        onChange={handleOnInput}
+                                        error={titleError}
+                                        slotProps={{
+                                            htmlInput: {
+                                                minLength: 5,
+                                                name: 'title'
+                                            }
+                                        }}
                                         required
                                     />
-                                </Tooltip>
-                            </FormControl>
-                        </Grid>
+                                </FormControl>
+                            </Grid>
 
-                        <Grid item xs={12}>
-                            <div className="flex items-center justify-center mb-5 gap-10">
-                                <div className="flex flex-col">
-                                    <Typography
-                                        variant="overline"
-                                        color="tertiary"
+                            <Grid item xs={12}>
+                                <FormControl fullWidth>
+                                    <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                                        Promoter *
+                                    </InputLabel>
+                                    <NativeSelect
+                                        defaultValue={formData.promoter_id}
+                                        onChange={handleOnInput}
+                                        inputProps={{
+                                            name: 'promoter_id',
+                                            id: 'uncontrolled-native',
+                                        }}
                                     >
-                                        select date</Typography>
-                                    <Typography
-                                        variant="h6"
-                                        color="tertiary">
-                                        {dayjs(formData.start_time).format("ddd, MMM D")}
-                                    </Typography>
+                                        {currentUser && <PromoterOptions networkId={currentUser.network_id}/>}
+                                    </NativeSelect>
+                                </FormControl>
+                                {/*<FormControl variant="standard" sx={{width: "100%"}}>*/}
+                                {/*    <TextField*/}
+                                {/*        variant="standard"*/}
+                                {/*        defaultValue={currentUser?.promoter || "Promoter *"}*/}
+                                {/*        required*/}
+                                {/*    />*/}
+                                {/*</FormControl>*/}
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <div className="flex items-center justify-center mb-5 gap-10">
+                                    <div className="flex flex-col">
+                                        <Typography
+                                            variant="overline"
+                                            color="tertiary"
+                                        >
+                                            select date</Typography>
+                                        <Typography
+                                            variant="h6"
+                                            color="tertiary">
+                                            {dayjs(formData.start_time).format("ddd, MMM D")}
+                                        </Typography>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <Typography variant="h4" color="tertiary">
+                                            {dayjs(formData.start_time).format("hh:mm")}
+                                        </Typography>
+                                        <Typography variant="h6" color="tertiary">
+                                            {dayjs(formData.start_time).format("A")}
+                                        </Typography>
+                                    </div>
                                 </div>
-                                <div className="flex gap-2">
-                                    <Typography variant="h4" color="tertiary">
-                                        {dayjs(formData.start_time).format("hh:mm")}
-                                    </Typography>
-                                    <Typography variant="h6" color="tertiary">
-                                        {dayjs(formData.start_time).format("A")}
-                                    </Typography>
-                                </div>
-                            </div>
-                            <ArrowSwitcherComponent formData={formData} setFormData={setFormData}/>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                sx={{float: "right", mt: 2}}
-                                onClick={() => mutation.mutate(formData)}
-                                disabled={isDisabled}
-                            >
-                                Submit
-                            </Button>
+                                <ArrowSwitcherComponent formData={formData} setFormData={setFormData}/>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    sx={{float: "right", mt: 2}}
+                                    onClick={() => mutation.mutate(formData)}
+                                    disabled={isDisabled}
+                                >
+                                    Submit
+                                </Button>
+                            </Grid>
                         </Grid>
-                    </Grid>
                     </Card>
                 </form>
             </Box>
