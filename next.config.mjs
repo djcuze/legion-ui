@@ -9,21 +9,21 @@ const nextConfig = {
       },
     ],
   },
-  async redirects() {
-    return [
-      {
-        source: '/:path((?!_next|login$).*)',
-        missing: [
-          {
-            type: 'cookie',
-            key: 'authorization'
-          },
-        ],
-        permanent: false,
-        destination: '/login',
-      }
-    ]
-  }
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/:path((?!_next|login$|register$).*)',
+  //       missing: [
+  //         {
+  //           type: 'cookie',
+  //           key: 'authorization'
+  //         },
+  //       ],
+  //       permanent: false,
+  //       destination: '/login',
+  //     }
+  //   ]
+  // }
 };
 
 export default nextConfig;

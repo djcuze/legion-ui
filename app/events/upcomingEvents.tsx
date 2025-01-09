@@ -16,7 +16,7 @@ import Card from "@mui/material/Card";
 
 export const getUpcomingEvents = async () => {
     const headers = await getHeaders()
-    const response = await fetch('http://localhost:3000/events', {
+    const response = await fetch('https://legion-events-au-platform-03eeffdb069d.herokuapp.com/events', {
         method: 'GET',
         headers: headers
     })

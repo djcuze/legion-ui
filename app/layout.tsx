@@ -23,6 +23,9 @@ export default function RootLayout({
         return !!cookie?.value
     }
 
+    // const isLoggedIn = use(loggedIn())
+    const isLoggedIn = true
+
     return (
     <html lang="en">
     <head>
@@ -31,7 +34,7 @@ export default function RootLayout({
     <body className="mb-24 bg-[#fafafa]">
     <Providers>
         <Box className="flex flex-col">
-            <Navbar isLoggedIn={use(loggedIn())}/>
+            <Navbar isLoggedIn={isLoggedIn}/>
             <Box className={"max-w-[1200px] mx-auto w-full"}>
                 {children}
             </Box>

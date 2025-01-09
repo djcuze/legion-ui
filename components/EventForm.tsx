@@ -36,7 +36,7 @@ export const EventForm = () => {
 
     const addEvent = async (e) => {
         const headers = await getHeaders()
-        await fetch('http://localhost:3000/events', {
+        await fetch('https://legion-events-au-platform-03eeffdb069d.herokuapp.com/events', {
             method: "POST",
             headers: headers,
             body: JSON.stringify({event: formData})

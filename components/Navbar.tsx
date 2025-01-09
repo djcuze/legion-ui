@@ -27,7 +27,8 @@ function ResponsiveAppBar({isLoggedIn}) {
         {label: "Profile", onClick: () => navigate("/profile")},
         {label: "Logout", onClick: logOut}
     ] : [
-        {label: "Login", onClick: () => navigate("/login")}
+        {label: "Login", onClick: () => navigate("/login")},
+        {label: "Sign up for an account", onClick: () => navigate("/register")},
     ];
 
     const pages = isLoggedIn ? [
@@ -40,7 +41,7 @@ function ResponsiveAppBar({isLoggedIn}) {
 
     async function logOut() {
         const headers = await getHeaders()
-        const response = await fetch('http://localhost:3000/session', {
+        const response = await fetch('https://legion-events-au-platform-03eeffdb069d.herokuapp.com/session', {
             method: "DELETE",
             headers: headers
         })
@@ -126,36 +127,36 @@ function ResponsiveAppBar({isLoggedIn}) {
 
                         ))}
                     </Box>
-                    <Box sx={{flexGrow: 0}}>
-                        <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                                {currentUser && <Avatar alt={currentUser.name} src={currentUser.avatar_url}/>}
-                            </IconButton>
-                        </Tooltip>
-                        <Menu
-                            sx={{mt: '45px'}}
-                            id="menu-appbar"
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
-                        >
-                            {settings.map((setting) => (
-                                <MenuItem key={setting.label} onClick={handleCloseUserMenu}>
-                                    <Typography sx={{textAlign: 'center'}}
-                                                onClick={setting.onClick}>{setting.label}</Typography>
-                                </MenuItem>
-                            ))}
-                        </Menu>
-                    </Box>
+                    {/*<Box sx={{flexGrow: 0}}>*/}
+                    {/*    <Tooltip title="Open settings">*/}
+                    {/*        <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>*/}
+                    {/*            {currentUser && <Avatar alt={currentUser.name} src={currentUser.avatar_url}/>}*/}
+                    {/*        </IconButton>*/}
+                    {/*    </Tooltip>*/}
+                    {/*    <Menu*/}
+                    {/*        sx={{mt: '45px'}}*/}
+                    {/*        id="menu-appbar"*/}
+                    {/*        anchorEl={anchorElUser}*/}
+                    {/*        anchorOrigin={{*/}
+                    {/*            vertical: 'top',*/}
+                    {/*            horizontal: 'right',*/}
+                    {/*        }}*/}
+                    {/*        keepMounted*/}
+                    {/*        transformOrigin={{*/}
+                    {/*            vertical: 'top',*/}
+                    {/*            horizontal: 'right',*/}
+                    {/*        }}*/}
+                    {/*        open={Boolean(anchorElUser)}*/}
+                    {/*        onClose={handleCloseUserMenu}*/}
+                    {/*    >*/}
+                    {/*        {settings.map((setting) => (*/}
+                    {/*            <MenuItem key={setting.label} onClick={handleCloseUserMenu}>*/}
+                    {/*                <Typography sx={{textAlign: 'center'}}*/}
+                    {/*                            onClick={setting.onClick}>{setting.label}</Typography>*/}
+                    {/*            </MenuItem>*/}
+                    {/*        ))}*/}
+                    {/*    </Menu>*/}
+                    {/*</Box>*/}
                 </Toolbar>
             </Container>
         </AppBar>

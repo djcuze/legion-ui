@@ -18,7 +18,7 @@ import Divider from "@mui/material/Divider";
 
 const getNetworkPromoters = async (networkId) => {
     const headers = await getHeaders()
-    const response = await fetch(`http://localhost:3000/networks/${networkId}/promoters`, {
+    const response = await fetch(`https://legion-events-au-platform-03eeffdb069d.herokuapp.com/networks/${networkId}/promoters`, {
         method: 'GET',
         headers: headers
     })
