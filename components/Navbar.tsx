@@ -17,22 +17,26 @@ import Link from "next/link";
 import Image from "next/image";
 import legionLogo from "../public/legionLogo.png"
 import {getHeaders, navigate, setCookie} from "../app/actions";
-
-const pages = [
-    {title: "Home", href: "/"},
-    {title: "Events", href: "/events"}
-];
+import useCurrentUser from "../hooks/useCurrentUser";
 
 function ResponsiveAppBar({isLoggedIn}) {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-
+    const { data: currentUser } = useCurrentUser();
     const settings = isLoggedIn ? [
         {label: "Profile", onClick: () => navigate("/profile")},
         {label: "Logout", onClick: logOut}
     ] : [
         {label: "Login", onClick: () => navigate("/login")}
     ];
+
+    const pages = isLoggedIn ? [
+        {title: "Home", href: "/"},
+        {title: "Events", href: "/events"},
+        {title: "Network", href: "/network"}
+    ] : [
+        {title: "Home", href: "/"}
+    ]
 
     async function logOut() {
         const headers = await getHeaders()
@@ -98,11 +102,11 @@ function ResponsiveAppBar({isLoggedIn}) {
                             sx={{display: {xs: 'block', md: 'none'}}}
                         >
                             {pages.map((page) => (
-                                <MenuItem key={page.title} onClick={handleCloseNavMenu}>
-                                    <Link href={page.href}>
+                                <Link key={page.title} href={page.href}>
+                                    <MenuItem onClick={handleCloseNavMenu}>
                                         <Typography sx={{textAlign: 'center'}}>{page.title}</Typography>
-                                    </Link>
-                                </MenuItem>
+                                    </MenuItem>
+                                </Link>
                             ))}
                         </Menu>
                     </Box>
@@ -111,21 +115,21 @@ function ResponsiveAppBar({isLoggedIn}) {
                     </Box>
                     <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
                         {pages.map((page) => (
-                            <Button
-                                key={page.title}
-                                onClick={handleCloseNavMenu}
-                                sx={{my: 2, color: 'white', display: 'block'}}
-                            >
-                                <Link href={page.href}>
+                            <Link href={page.href} key={page.title}>
+                                <Button
+                                    onClick={handleCloseNavMenu}
+                                    sx={{my: 2, color: 'white', display: 'block'}}
+                                >
                                     {page.title}
-                                </Link>
-                            </Button>
+                                </Button>
+                            </Link>
+
                         ))}
                     </Box>
                     <Box sx={{flexGrow: 0}}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg"/>
+                                {currentUser && <Avatar alt={currentUser.name} src={currentUser.avatar_url}/>}
                             </IconButton>
                         </Tooltip>
                         <Menu

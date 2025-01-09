@@ -12,6 +12,7 @@ import Divider from "@mui/material/Divider";
 import {CircularProgress} from "@mui/material";
 import Box from "@mui/material/Box";
 import {getCookie, getHeaders} from "../actions";
+import Loading from "../../components/Loading";
 
 export const getUpcomingEvents = async () => {
     const headers = await getHeaders()
@@ -30,17 +31,7 @@ export default function UpcomingEvents() {
     })
 
     if (isFetching) {
-        return (
-            <Box
-                display="flex"
-                justifyContent="center"
-                flexDirection="column"
-                sx={{height: "200px"}}
-                alignItems="center">
-                <CircularProgress color={"inherit"}/>
-                <Typography sx={{mt: 2}} variant="button">Loading</Typography>
-            </Box>
-        )
+        return <Loading/>
     }
 
     if (data) {

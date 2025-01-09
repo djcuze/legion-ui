@@ -35,7 +35,7 @@ export default function NotificationsSignInPageError() {
                 response.json().then(async (r) => {
                     await setCookie('authorization', r.data.token)
                     enqueueSnackbar("Successfully logged in", {variant: "success", autoHideDuration: 1000})
-                    await navigate("/events")
+                    await navigate("/")
                 })
             } else {
                 resolve({type: 'CredentialsSignin', error: "Username and/or password not found"})

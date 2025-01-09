@@ -34,8 +34,6 @@ export default function Profile() {
         return null
     }
 
-    const detailKeys = Object.keys(data)
-
     return (
         <Container sx={{mt: 10, mb: 8}}>
             <Box>
@@ -43,9 +41,9 @@ export default function Profile() {
             </Box>
 
             <List sx={{maxWidth: "500px"}}>
-                {detailKeys.map((item) => (
-                    <ProfileDetail label={item} value={data[item]} key={item}/>
-                ))}
+                <ProfileDetail label={"Name"} value={data.name} key={data.name}/>
+                <ProfileDetail label={"Email address"} value={data.email_address} key={data.email_address}/>
+                <ProfileDetail label={"Promoter"} value={data.promoter} key={data.promoter}/>
             </List>
         </Container>
     )
