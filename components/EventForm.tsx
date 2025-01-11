@@ -347,8 +347,8 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
                                                 <div className="flex-grow-0">
                                                     <CoverPhotoUpload
                                                         handleFileUpload={handleFileUpload}
-                                                        setIsLoading={setIsLoading}
-                                                        isLoading={isLoading}/>
+                                                        isLoading={isLoading}
+                                                        hasExistingUpload={!!formData.cover_photo_url}/>
                                                 </div>
                                                 {formData.cover_photo_url &&
                                                   <Image src={formData.cover_photo_url} alt="Uploaded file" width="200"

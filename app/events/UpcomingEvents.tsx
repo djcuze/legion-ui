@@ -20,6 +20,7 @@ import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import Tooltip from "@mui/material/Tooltip";
 import EditIcon from '@mui/icons-material/Edit';
 import Link from "@mui/material/Link";
+import Divider from "@mui/material/Divider";
 
 function IconLinks({event}) {
     return (
@@ -164,11 +165,13 @@ export default function UpcomingEvents({setSelectedEvent, scrollToForm}) {
 
                         <List sx={{width: '100%'}} dense>
                             {data.events[month].map(event => (
-                                <EventListItem
-                                    event={event}
-                                    key={event.id}
-                                    scrollToForm={scrollToForm}
-                                    setSelectedEvent={setSelectedEvent}/>
+                               <React.Fragment key={event.id}>
+                                   <EventListItem
+                                       event={event}
+                                       scrollToForm={scrollToForm}
+                                       setSelectedEvent={setSelectedEvent}/>
+                                   <Divider component="li" sx={{my: 0.5}}/>
+                               </React.Fragment>
                             ))}
                         </List>
                     </Grid>

@@ -16,7 +16,7 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-export default function CoverPhotoUpload({handleFileUpload, isLoading, setIsLoading}) {
+export default function CoverPhotoUpload({handleFileUpload, isLoading, hasExistingUpload}) {
     return (
         <LoadingButton
             component="label"
@@ -28,9 +28,10 @@ export default function CoverPhotoUpload({handleFileUpload, isLoading, setIsLoad
             tabIndex={-1}
             startIcon={<CloudUploadIcon />}
         >
-            Upload file
+            {hasExistingUpload ? "Replace file" : "Upload file"}
             <VisuallyHiddenInput
                 type="file"
+                accept={"image/png, image/jpg, image/jpeg"}
                 onChange={handleFileUpload}
             />
         </LoadingButton>
