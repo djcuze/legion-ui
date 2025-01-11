@@ -200,12 +200,10 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
     }
 
     async function handleFileUpload(e) {
-        const headers = await getHeaders()
-
         if (!e.target.files) {
             throw new Error('No file selected');
         }
-
+        setIsDisabled(true)
         setIsLoading(true)
 
         const file = e.target.files[0];
@@ -216,17 +214,16 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
                 method: 'POST',
                 body: file,
             }
-        )
-
-        const newBlob = (await response.json()) as PutBlobResult;
-
-
-        if (newBlob.url) {
-            setFormData({...formData, cover_photo_url: newBlob.url})
-            enqueueSnackbar("Cover photo uploaded successfully. Be sure to save the form", {variant: "success", autoHideDuration: 2700})
-        }
-
-        setIsLoading(false)
+        ).then((resp) => resp.json())
+            .then((resp) => {
+                setFormData({...formData, cover_photo_url: resp.url})
+                enqueueSnackbar("Cover photo uploaded successfully. Be sure to save the form", {
+                    variant: "success",
+                    autoHideDuration: 2700
+                })
+                setIsLoading(false)
+                setIsDisabled(false)
+            })
     }
 
     // @ts-ignore
@@ -317,7 +314,6 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
                                                             name: 'facebook_url'
                                                         }
                                                     }}
-                                                    required
                                                 />
                                             </FormControl>
                                         </Grid>
@@ -336,7 +332,6 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
                                                             name: 'ticket_url'
                                                         }
                                                     }}
-                                                    required
                                                 />
                                             </FormControl>
                                         </Grid>
@@ -355,7 +350,9 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
                                                         setIsLoading={setIsLoading}
                                                         isLoading={isLoading}/>
                                                 </div>
-                                                {formData.cover_photo_url && <Image src={formData.cover_photo_url} alt="Uploaded file" width="200" height={"100"}/>}
+                                                {formData.cover_photo_url &&
+                                                  <Image src={formData.cover_photo_url} alt="Uploaded file" width="200"
+                                                         height={"100"}/>}
                                             </Box>
 
                                             <Divider sx={{my: 2}}/>
