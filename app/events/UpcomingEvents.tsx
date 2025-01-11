@@ -85,7 +85,7 @@ function EventListItem({event, setSelectedEvent, scrollToForm}) {
         <ListItem
             onMouseOver={() => setShowActions(true)}
             onMouseLeave={() => setShowActions(false)}
-            sx={{px: 0, alignItems: "flex-start"}}>
+            sx={{px: 0, alignItems: "flex-start", opacity: event.has_elapsed ? "0.3" : "1"}}>
             <ListItemAvatar sx={{margin: 0}}>
                 <ListItemText
                     primary={dayjs(event.start_time).format('ddd D')}
