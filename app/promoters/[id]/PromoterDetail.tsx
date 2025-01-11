@@ -18,6 +18,7 @@ import Grid from "@mui/material/Grid2";
 import {redirect} from "next/navigation";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
+import EventsList from "./EventsList";
 
 export default function PromoterDetail({promoter}) {
     return (
@@ -119,6 +120,15 @@ export default function PromoterDetail({promoter}) {
                             </Typography>
                             <Typography variant="body1">{promoter.bio || '-'}</Typography>
                         </Stack>
+                        <Divider sx={{mt: 3}}/>
+                    </Grid>
+
+
+                    <Grid size={{xs: 0, md: 3}} sx={{display: { xs: 'none', md: 'block' }}}>
+                    </Grid>
+
+                    <Grid size={{xs: 12, md: 9}}>
+                        <EventsList promoter={promoter}/>
                     </Grid>
                 </Grid>
             </Container>
