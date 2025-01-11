@@ -19,6 +19,7 @@ import {redirect} from "next/navigation";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import EventsList from "./EventsList";
+import Tooltip from "@mui/material/Tooltip";
 
 export default function PromoterDetail({promoter}) {
     return (
@@ -72,13 +73,21 @@ export default function PromoterDetail({promoter}) {
 
                     <Grid size={{xs: 3}}>
                         <Box className="flex flex-row items-center justify-end">
-                            {promoter.facebook_url && <IconButton onClick={() => redirect(promoter.facebook_url)}>
-                              <FacebookIcon/>
-                            </IconButton>}
+                            {promoter.facebook_url && (
+                                <Tooltip title={`${promoter.name} on Facebook`} arrow placement={"top"}>
+                                    <IconButton onClick={() => redirect(promoter.facebook_url)}>
+                                        <FacebookIcon fontSize="large"/>
+                                    </IconButton>
+                                </Tooltip>
+                            )}
                             {
-                                promoter.instagram_url && <IconButton onClick={() => redirect(promoter.instagram_url)}>
-                                <InstagramIcon/>
-                              </IconButton>
+                                promoter.instagram_url && (
+                                    <Tooltip title={`${promoter.name} on Instagram`} arrow placement={"top"}>
+                                        <IconButton onClick={() => redirect(promoter.instagram_url)}>
+                                            <InstagramIcon fontSize="large"/>
+                                        </IconButton>
+                                    </Tooltip>
+                                )
                             }
                         </Box>
                     </Grid>
@@ -124,7 +133,7 @@ export default function PromoterDetail({promoter}) {
                     </Grid>
 
 
-                    <Grid size={{xs: 0, md: 3}} sx={{display: { xs: 'none', md: 'block' }}}>
+                    <Grid size={{xs: 0, md: 3}} sx={{display: {xs: 'none', md: 'block'}}}>
                     </Grid>
 
                     <Grid size={{xs: 12, md: 9}}>
