@@ -37,12 +37,14 @@ export default function PromoterDetail({promoter}) {
                 <Typography color="primary">{promoter.name}</Typography>
             </Breadcrumbs>
 
-            {
-                promoter.cover_photo_url
-                    ?
-                    <Image src={promoter.cover_photo_url} alt="" height="600" width="1200"/>
-                    : <img src={"https://placehold.co/1200x600"} alt="" height="600" width="1200"/>
-            }
+            <Box sx={{maxHeight: "400px", overflow: "hidden"}}>
+                {
+                    promoter.cover_photo_url
+                        ?
+                        <Image src={promoter.cover_photo_url} alt="" height="600" width="1200"/>
+                        : <img src={"https://placehold.co/1200x600"} alt="" height="600" width="1200"/>
+                }
+            </Box>
 
             <Container sx={{mt: 2, width: "100%"}} disableGutters>
                 <Grid
