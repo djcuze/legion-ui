@@ -11,6 +11,7 @@ import {AppRouterCacheProvider} from '@mui/material-nextjs/v15-appRouter';
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import {createTheme, ThemeProvider} from "@mui/material";
 import {SnackbarProvider} from "notistack";
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function makeQueryClient() {
     return new QueryClient({
@@ -46,7 +47,7 @@ const theme = createTheme({
     },
 });
 
-export default function Providers({children}: { children: React.ReactNode }) {
+export default function Providers({currentUser, children}: { currentUser: any, children: React.ReactNode }) {
     // NOTE: Avoid useState when initializing the query client if you don't
     //       have a suspense boundary between this and the code that may
     //       suspend because React will throw away the client on the initial
@@ -59,7 +60,9 @@ export default function Providers({children}: { children: React.ReactNode }) {
                 <ReactQueryDevtools initialIsOpen={false}/>
                 <ThemeProvider theme={theme}>
                     <SnackbarProvider maxSnack={1}>
-                        {children}
+                        <CurrentUserContext.Provider value={currentUser}>
+                            {children}
+                        </CurrentUserContext.Provider>
                     </SnackbarProvider>
                 </ThemeProvider>
             </QueryClientProvider>

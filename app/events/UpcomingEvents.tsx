@@ -19,6 +19,7 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import Tooltip from "@mui/material/Tooltip";
 import EditIcon from '@mui/icons-material/Edit';
+import Link from "@mui/material/Link";
 
 function IconLinks({event}) {
     return (
@@ -78,6 +79,7 @@ function EventListItem({event, setSelectedEvent, scrollToForm}) {
         setSelectedEvent(event)
         scrollToForm()
     }
+
     return (
         <ListItem
             onMouseOver={() => setShowActions(true)}
@@ -96,14 +98,17 @@ function EventListItem({event, setSelectedEvent, scrollToForm}) {
             />
 
             <Box sx={{width: "100%"}}>
-                <ListItemText
-                    sx={{m: 0, maxWidth: "250px"}}
-                    primary={event.title}
-                    secondary={event.promoter.name}
-                    slotProps={{
-                        primary: {fontSize: 13, fontWeight: 'medium'},
-                        secondary: {fontSize: 11, fontWeight: 'medium'}
-                    }}/>
+                <ListItemText sx={{m: 0, maxWidth: "250px"}}>
+                    <Typography
+                        variant={"body2"}
+                        fontSize={"small"}>{event.title}</Typography>
+                    <Link
+                        color={"primary"}
+                        variant={"body2"}
+                        fontSize={"11px"}
+                        href={`/promoters/${event.promoter.id}`}
+                        underline={"hover"}>{event.promoter.name}</Link>
+                </ListItemText>
                 {
                     event.ticket_url || event.facebook_url ? (
                         <IconLinks event={event}/>
@@ -143,7 +148,7 @@ export default function UpcomingEvents({setSelectedEvent, scrollToForm}) {
     }
 
     if (!data) {
-       return null
+        return null
     }
 
     const months = Object.keys(data.events)
@@ -163,7 +168,7 @@ export default function UpcomingEvents({setSelectedEvent, scrollToForm}) {
                                     event={event}
                                     key={event.id}
                                     scrollToForm={scrollToForm}
-                                    setSelectedEvent={setSelectedEvent} />
+                                    setSelectedEvent={setSelectedEvent}/>
                             ))}
                         </List>
                     </Grid>

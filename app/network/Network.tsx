@@ -15,6 +15,7 @@ import Loading from "../../components/Loading";
 import * as React from "react";
 import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
+import Link from "@mui/material/Link";
 
 export const getNetworkPromoters = async (networkId) => {
     const headers = await getHeaders()
@@ -32,6 +33,7 @@ export async function checkAuthentication() {
 
         return !!cookie?.value
     }
+
     const isLoggedIn = await loggedIn()
 
     if (!isLoggedIn) {
@@ -70,7 +72,7 @@ export default function Network() {
                             <ListItemAvatar>
                                 <Avatar alt={item.name} src={item.avatar_url}/>
                             </ListItemAvatar>
-                            <ListItemText primary={item.name}/>
+                            <Link href={`/promoters/${item.id}`} underline={"hover"}>{item.name}</Link>
                         </ListItem>
                     ))}
                 </List>

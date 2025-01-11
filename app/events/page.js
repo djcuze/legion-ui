@@ -3,7 +3,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query'
-import { getUpcomingEvents } from './upcomingEvents'
+import { getUpcomingEvents } from './UpcomingEvents'
 import Container from '@mui/material/Container'
 import * as React from 'react'
 import Events from './Events'

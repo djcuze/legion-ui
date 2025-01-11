@@ -1,7 +1,7 @@
 'use client'
 
 import Typography from "@mui/material/Typography";
-import UpcomingEvents from "./upcomingEvents";
+import UpcomingEvents from "./UpcomingEvents";
 import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
 import {EventForm} from "../../components/EventForm";

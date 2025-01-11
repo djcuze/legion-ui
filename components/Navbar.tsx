@@ -34,6 +34,7 @@ function ResponsiveAppBar({isLoggedIn}) {
     const pages = isLoggedIn ? [
         {title: "Home", href: "/"},
         {title: "Events", href: "/events"},
+        {title: "Promoters", href: "/promoters"},
         {title: "Network", href: "/network"}
     ] : [
         {title: "Home", href: "/"}
