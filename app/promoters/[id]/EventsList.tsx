@@ -13,6 +13,7 @@ import {IconButton} from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import Divider from "@mui/material/Divider";
+import Loading from "../../../components/Loading";
 
 function IconLinks({event}) {
     return (
@@ -117,8 +118,8 @@ export default function EventsList({promoter}) {
         queryFn: () => getPromoterEvents(promoter.id),
     })
 
-    if (!data || isFetching) {
-        return null
+    if (isFetching) {
+        return <Loading/>
     }
 
     const nextEvent = data.events[0]
