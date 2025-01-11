@@ -14,7 +14,6 @@ import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Image from "next/image";
 
-import heroImage from '../../../public/heroImage.jpg'
 import Grid from "@mui/material/Grid2";
 import {redirect} from "next/navigation";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -38,7 +37,12 @@ export default function PromoterDetail({promoter}) {
                 <Typography color="primary">{promoter.name}</Typography>
             </Breadcrumbs>
 
-            <Image src={heroImage} alt=""/>
+            {
+                promoter.cover_photo_url
+                    ?
+                    <Image src={promoter.cover_photo_url} alt="" height="600" width="1200"/>
+                    : <img src={"https://placehold.co/1200x600"} alt="" height="600" width="1200"/>
+            }
 
             <Container sx={{mt: 2, width: "100%"}} disableGutters>
                 <Grid
@@ -65,11 +69,11 @@ export default function PromoterDetail({promoter}) {
 
                     <Grid size={{xs: 3}}>
                         <Box className="flex flex-row items-center justify-end">
-                            {promoter.facebook_url && <IconButton onClick={() => redirect(promoter.facebook_url, 'push')}>
-                                <FacebookIcon/>
+                            {promoter.facebook_url && <IconButton onClick={() => redirect(promoter.facebook_url)}>
+                              <FacebookIcon/>
                             </IconButton>}
                             {
-                                promoter.instagram_url && <IconButton onClick={() => redirect(promoter.instagram_url, 'push')}>
+                                promoter.instagram_url && <IconButton onClick={() => redirect(promoter.instagram_url)}>
                                 <InstagramIcon/>
                               </IconButton>
                             }

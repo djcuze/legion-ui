@@ -20,6 +20,11 @@ import InputLabel from "@mui/material/InputLabel";
 import NativeSelect from "@mui/material/NativeSelect";
 import {getNetworkPromoters} from "../app/network/Network";
 import Link from "@mui/material/Link";
+import CoverPhotoUpload from "../app/events/CoverPhotoUpload";
+import Divider from "@mui/material/Divider";
+import type {PutBlobResult} from "@vercel/blob";
+import Image from 'next/image'
+
 
 function PromoterOptions({networkId}) {
     const [promoterOptions, setPromoterOptions] = useState([]);
@@ -58,6 +63,7 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
     const {enqueueSnackbar} = useSnackbar();
     const {data: currentUser} = useCurrentUser()
     const [isDisabled, setIsDisabled] = useState(true)
+    const [isLoading, setIsLoading] = useState(false);
 
     const start_time = dayjs().weekday(5).hour(21).minute(0).second(0)
 
@@ -67,7 +73,8 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
         start_time: start_time,
         facebook_url: "",
         ticket_url: "",
-        password: ""
+        password: "",
+        cover_photo_url: ""
     }
 
     const [formData, setFormData] = useState(defaultFormData);
@@ -83,6 +90,7 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
             start_time: dayjs(selectedEvent.start_time),
             facebook_url: selectedEvent.facebook_url || "",
             ticket_url: selectedEvent.ticket_url || "",
+            cover_photo_url: selectedEvent.cover_photo_url || "",
             password: ""
         })
     }, [selectedEvent])
@@ -98,6 +106,7 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
             formData.promoter_id === selectedEvent.promoter.id &&
             formData.facebook_url === selectedEvent.facebook_url &&
             formData.ticket_url === selectedEvent.ticket_url &&
+            formData.cover_photo_url === selectedEvent.cover_photo_url &&
             start_time_diff === 0
         )
     }
@@ -188,6 +197,36 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
     function handleReset() {
         setFormData(defaultFormData)
         setSelectedEvent(undefined)
+    }
+
+    async function handleFileUpload(e) {
+        const headers = await getHeaders()
+
+        if (!e.target.files) {
+            throw new Error('No file selected');
+        }
+
+        setIsLoading(true)
+
+        const file = e.target.files[0];
+
+        const response = await fetch(
+            `/events/upload?filename=${file.name}`,
+            {
+                method: 'POST',
+                body: file,
+            }
+        )
+
+        const newBlob = (await response.json()) as PutBlobResult;
+
+
+        if (newBlob.url) {
+            setFormData({...formData, cover_photo_url: newBlob.url})
+            enqueueSnackbar("Cover photo uploaded successfully. Be sure to save the form", {variant: "success", autoHideDuration: 2700})
+        }
+
+        setIsLoading(false)
     }
 
     // @ts-ignore
@@ -300,6 +339,26 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
                                                     required
                                                 />
                                             </FormControl>
+                                        </Grid>
+
+                                        <Grid item xs={12}>
+                                            <Typography
+                                                variant={"body2"}
+                                                gutterBottom
+                                                fontSize={"small"}
+                                                color={'rgba(0, 0, 0, 0.6)'}>Cover photo</Typography>
+
+                                            <Box className={"flex gap-2"}>
+                                                <div className="flex-grow-0">
+                                                    <CoverPhotoUpload
+                                                        handleFileUpload={handleFileUpload}
+                                                        setIsLoading={setIsLoading}
+                                                        isLoading={isLoading}/>
+                                                </div>
+                                                {formData.cover_photo_url && <Image src={formData.cover_photo_url} alt="Uploaded file" width="200" height={"100"}/>}
+                                            </Box>
+
+                                            <Divider sx={{my: 2}}/>
                                         </Grid>
                                     </>
                                 ) : null
