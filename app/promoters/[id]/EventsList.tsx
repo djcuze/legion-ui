@@ -12,6 +12,7 @@ import Tooltip from "@mui/material/Tooltip";
 import {IconButton} from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
+import Divider from "@mui/material/Divider";
 
 function IconLinks({event}) {
     return (
@@ -120,10 +121,19 @@ export default function EventsList({promoter}) {
         return null
     }
 
+    const nextEvent = data.events[0]
+
+    const futureEvents = data.events.slice(1)
+
     return (
         <>
-            <Typography variant="overline">Events</Typography>
-            {data.events.map(event => <EventListItem promoter={promoter} event={event} key={event.id}/>)}
+            <Typography variant="overline">Next up</Typography>
+            <EventListItem promoter={promoter} event={nextEvent} key={nextEvent.id}/>
+
+            <Divider variant="middle" sx={{mb: 2}}/>
+
+            <Typography variant="overline">Future events</Typography>
+            {futureEvents.map(event => <EventListItem promoter={promoter} event={event} key={event.id}/>)}
         </>
     )
 }
