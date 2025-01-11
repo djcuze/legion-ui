@@ -15,7 +15,7 @@ const slots = {
     rightArrowIcon: ArrowRight,
 }
 
-export default function ArrowSwitcherComponent ({ formData, setFormData }) {
+export default function ArrowSwitcherComponent ({ formData, setFormData, setIsDisabled }) {
     const [currentComponent, setCurrentComponent] = React.useState('date')
     const [timePeriodIsMorning, setTimePeriodIsMorning] = React.useState(formData.start_time.format('a') === 'am')
 
@@ -34,6 +34,11 @@ export default function ArrowSwitcherComponent ({ formData, setFormData }) {
         return setFormData({ ...formData, start_time: formData.start_time.subtract(12, "hour") })
     }
 
+    function handleOnChange(newValue) {
+        setFormData({ ...formData, start_time: newValue })
+        setIsDisabled(false)
+    }
+
     return (
         <Stack spacing={2} sx={{ height: '360px', maxWidth: '600px', margin: '0 auto', width: '100%' }} color="tertiary"
                alignItems="center">
@@ -50,7 +55,7 @@ export default function ArrowSwitcherComponent ({ formData, setFormData }) {
             {currentComponent === 'date' && (
                 <DateCalendar
                     value={formData.start_time}
-                    onChange={(newValue) => setFormData({ ...formData, start_time: newValue })}
+                    onChange={handleOnChange}
                     slots={slots}
                 />
             )}
@@ -64,7 +69,7 @@ export default function ArrowSwitcherComponent ({ formData, setFormData }) {
                     </Stack>
                     <TimeClock
                         value={formData.start_time}
-                        onChange={(newValue) => setFormData({ ...formData, start_time: newValue })}
+                        onChange={handleOnChange}
                         slots={slots}
                         showViewSwitcher
                         sx={{ mt: 3 }}
