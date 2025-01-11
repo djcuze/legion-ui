@@ -16,6 +16,12 @@ import * as React from "react";
 import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
+import Tooltip from "@mui/material/Tooltip";
+import {redirect} from "next/navigation";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import IconButton from "@mui/material/IconButton";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import Stack from "@mui/material/Stack";
 
 export const getNetworkPromoters = async (networkId) => {
     const headers = await getHeaders()
@@ -72,7 +78,25 @@ export default function Network() {
                             <ListItemAvatar>
                                 <Avatar alt={item.name} src={item.avatar_url}/>
                             </ListItemAvatar>
-                            <Link href={`/promoters/${item.id}`} underline={"hover"}>{item.name}</Link>
+                            <Stack>
+                                <Link href={`/promoters/${item.id}`} underline={"hover"}>{item.name}</Link>
+                                <Box sx={{ml: "-7px"}}>
+                                    {item.facebook_url && (
+                                        <Tooltip title={`${item.name} on Facebook`} arrow placement={"top"}>
+                                            <IconButton onClick={() => redirect(item.instagram_url)}>
+                                                <FacebookIcon fontSize="small"/>
+                                            </IconButton>
+                                        </Tooltip>
+                                    )}
+                                    {item.instagram_url && (
+                                        <Tooltip title={`${item.name} on Instagram`} arrow placement={"top"}>
+                                            <IconButton onClick={() => redirect(item.instagram_url)}>
+                                                <InstagramIcon fontSize="small"/>
+                                            </IconButton>
+                                        </Tooltip>
+                                    )}
+                                </Box>
+                            </Stack>
                         </ListItem>
                     ))}
                 </List>
