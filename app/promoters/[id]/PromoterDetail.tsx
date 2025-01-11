@@ -25,16 +25,16 @@ export default function PromoterDetail({promoter}) {
     return (
         <>
             <Breadcrumbs aria-label="breadcrumb" sx={{mb: 1}}>
-                <IconButton onClick={() => navigate('/home')}>
+                <IconButton onClick={() => navigate('/')}>
                     <HomeIcon/>
                 </IconButton>
                 <Link
                     underline="hover"
                     color="inherit"
                     sx={{cursor: 'pointer'}}
-                    onClick={() => navigate('/')}
+                    onClick={() => navigate('/network')}
                 >
-                    Promoters
+                    Network
                 </Link>
                 <Typography color="primary">{promoter.name}</Typography>
             </Breadcrumbs>
