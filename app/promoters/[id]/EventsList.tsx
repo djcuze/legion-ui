@@ -132,8 +132,14 @@ export default function EventsList({promoter}) {
 
             <Divider variant="middle" sx={{mb: 2}}/>
 
-            <Typography variant="overline">Future events</Typography>
-            {futureEvents.map(event => <EventListItem promoter={promoter} event={event} key={event.id}/>)}
+            {
+                futureEvents.length > 0 && (
+                    <>
+                        <Typography variant="overline">Future events</Typography>
+                        {futureEvents.map(event => <EventListItem promoter={promoter} event={event} key={event.id}/>)}
+                    </>
+                )
+            }
         </>
     )
 }
