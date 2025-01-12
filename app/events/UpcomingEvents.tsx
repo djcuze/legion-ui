@@ -83,11 +83,13 @@ function EventListItem({event, setSelectedEvent, scrollToForm}) {
         scrollToForm()
     }
 
+    const isVisible = dayjs(event.start_time).endOf("day") > dayjs().startOf("day");
+
     return (
         <ListItem
             onMouseOver={() => setShowActions(true)}
             onMouseLeave={() => setShowActions(false)}
-            sx={{px: 0, alignItems: "flex-start"}}>
+            sx={{px: 0, alignItems: "flex-start", opacity: isVisible ? 1 : 0.25}}>
             <ListItemAvatar sx={{margin: 0, mr: 1}}>
                 <ListItemText
                     primary={dayjs(event.start_time).format('ddd D')}

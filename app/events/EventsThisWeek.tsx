@@ -74,7 +74,7 @@ function IconLinks({event}) {
     )
 }
 
-function EventListItem({event, setSelectedEvent, scrollToForm}) {
+function EventListItem({event, setSelectedEvent, scrollToForm, isVisible = (event) => true}) {
     const [showActions, setShowActions] = React.useState(false)
 
     function handleOnClick() {
@@ -86,7 +86,7 @@ function EventListItem({event, setSelectedEvent, scrollToForm}) {
         <ListItem
             onMouseOver={() => setShowActions(true)}
             onMouseLeave={() => setShowActions(false)}
-            sx={{px: 0, alignItems: "flex-start"}}>
+            sx={{px: 0, alignItems: "flex-start", opacity: isVisible(event) ? 1 : 0.25}}>
             <ListItemAvatar sx={{margin: 0, mr: 1, width: "90px"}}>
                 <ListItemText
                     primary={dayjs(event.start_time).format('ddd D MMM')}
@@ -227,9 +227,13 @@ export function EventsThisMonth({setSelectedEvent, scrollToForm}) {
             // @ts-ignore
             .filter(event => dayjs(event.start_time) >= dayjs().startOf('month') && dayjs(event.start_time) <= dayjs().endOf('month'))
 
+    const isVisible = (event) => dayjs(event.start_time).endOf("day") > dayjs().startOf("day");
+
+
     return (
         <Box sx={{fontSize: "10px", minHeight: "300px"}}>
             {events.map(event => <EventListItem scrollToForm={scrollToForm} setSelectedEvent={setSelectedEvent}
+                                                isVisible={isVisible}
                 // @ts-ignore
                                                 event={event} key={event.id}/>)}
         </Box>
