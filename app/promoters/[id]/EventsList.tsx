@@ -122,10 +122,11 @@ export default function EventsList({promoter}) {
         return <Loading/>
     }
 
-    const nextEvent = data.events[0]
+    const futureEvents = data.events.filter(event => dayjs(event.start_time) >= dayjs().startOf('day'))
 
-    const futureEvents = data.events.slice(1)
+    const nextEvent = futureEvents[0]
 
+    const futureEventsWithoutNext = futureEvents.slice(1)
     return (
         <>
             <Typography variant="overline">Next up</Typography>
@@ -134,10 +135,10 @@ export default function EventsList({promoter}) {
             <Divider variant="middle" sx={{mb: 2}}/>
 
             {
-                futureEvents.length > 0 && (
+                futureEventsWithoutNext.length > 0 && (
                     <>
                         <Typography variant="overline">Future events</Typography>
-                        {futureEvents.map(event => <EventListItem promoter={promoter} event={event} key={event.id}/>)}
+                        {futureEventsWithoutNext.map(event => <EventListItem promoter={promoter} event={event} key={event.id}/>)}
                     </>
                 )
             }
