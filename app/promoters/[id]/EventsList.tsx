@@ -9,11 +9,13 @@ import * as React from "react";
 import {useQuery} from "@tanstack/react-query";
 import {getHeaders} from "../../actions";
 import Tooltip from "@mui/material/Tooltip";
-import {IconButton} from "@mui/material";
+import {IconButton, Tab, Tabs} from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import Divider from "@mui/material/Divider";
 import Loading from "../../../components/Loading";
+import Grid from "@mui/material/Grid2";
+import {useEffect, useState} from "react";
 
 function IconLinks({event}) {
     return (
@@ -105,14 +107,43 @@ function EventListItem({event, promoter}) {
 export const getPromoterEvents = async (promoterId) => {
     const headers = await getHeaders()
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/promoters/${promoterId}/events`, {
-        method: 'GET',
+        method: 'POST',
         headers: headers
     })
 
     return response.json()
 }
 
-export default function EventsList({promoter}) {
+export const getPastEvents = async (promoterId) => {
+    const headers = await getHeaders()
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/promoters/${promoterId}/events`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({ start_time: dayjs().subtract(1, 'month'), end_time: dayjs() })
+    })
+
+    return response.json()
+}
+
+function PastEvents({promoter}) {
+    const {data, isFetching} = useQuery({
+        queryKey: ['promoter', promoter.id, 'pastEvents'],
+        queryFn: () => getPastEvents(promoter.id),
+    })
+
+    if (isFetching) {
+        return <Loading/>
+    }
+
+    if (data.events.length === 0) {
+        return null
+    }
+
+    return data.events.map(event => <EventListItem promoter={promoter} event={event} key={event.id}/>)
+}
+
+
+function FutureEvents({promoter}) {
     const {data, isFetching} = useQuery({
         queryKey: ['promoter', promoter.id, 'events'],
         queryFn: () => getPromoterEvents(promoter.id),
@@ -122,11 +153,29 @@ export default function EventsList({promoter}) {
         return <Loading/>
     }
 
-    const futureEvents = data.events.filter(event => dayjs(event.start_time) >= dayjs().startOf('day'))
+    const excludingNextUp = data.events.filter(event => dayjs(event.start_time) >= dayjs().startOf('day')).slice(1)
 
-    const nextEvent = futureEvents[0]
+    if (excludingNextUp.length === 0) {
+        return null
+    }
 
-    const futureEventsWithoutNext = futureEvents.slice(1)
+    return excludingNextUp.map(event => <EventListItem promoter={promoter} event={event} key={event.id}/>)
+}
+
+export default function EventsList({promoter}) {
+    const [isShowingFutureEvents, setIsShowingFutureEvents] = useState(true)
+
+    const {data, isFetching} = useQuery({
+        queryKey: ['promoter', promoter.id, 'events'],
+        queryFn: () => getPromoterEvents(promoter.id),
+    })
+
+    if (isFetching) {
+        return <Loading/>
+    }
+
+    const nextEvent = data.events.filter(event => dayjs(event.start_time) >= dayjs().startOf('day'))[0]
+
     return (
         <>
             <Typography variant="overline">Next up</Typography>
@@ -134,13 +183,17 @@ export default function EventsList({promoter}) {
 
             <Divider variant="middle" sx={{mb: 2}}/>
 
+            <Tabs value={isShowingFutureEvents ? 0 : 1}
+                  sx={{mb: 2}}
+                  onChange={() => setIsShowingFutureEvents(!isShowingFutureEvents)} aria-label="disabled tabs example">
+                <Tab label="Future"/>
+                <Tab label="Past"/>
+            </Tabs>
+
             {
-                futureEventsWithoutNext.length > 0 && (
-                    <>
-                        <Typography variant="overline">Future events</Typography>
-                        {futureEventsWithoutNext.map(event => <EventListItem promoter={promoter} event={event} key={event.id}/>)}
-                    </>
-                )
+                isShowingFutureEvents
+                    ? <FutureEvents promoter={promoter}/>
+                    : <PastEvents promoter={promoter}/>
             }
         </>
     )
