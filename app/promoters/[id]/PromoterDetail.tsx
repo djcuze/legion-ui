@@ -1,10 +1,6 @@
 'use client'
 
-import Breadcrumbs from "@mui/material/Breadcrumbs";
 import IconButton from "@mui/material/IconButton";
-import {navigate} from "../../actions";
-import HomeIcon from "@mui/icons-material/Home";
-import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import * as React from "react";
@@ -19,10 +15,34 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import EventsList from "./EventsList";
 import Tooltip from "@mui/material/Tooltip";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import HomeIcon from '@mui/icons-material/Home'
+import {navigate} from "../../actions";
 
 export default function PromoterDetail({promoter}) {
     return (
         <>
+            <Breadcrumbs
+                aria-label="breadcrumb"
+                sx={{ display: 'flex', alignItems: 'center', mb: 1, mt: 2 }}
+            >
+                <IconButton onClick={() => navigate('/home')}>
+                    <HomeIcon/>
+                </IconButton>
+                <Typography
+                    onClick={() => navigate('/network')}
+                    sx={{ cursor: 'pointer' }}
+                >
+                    Promoters
+                </Typography>
+                <Typography
+                    color={"primary"}
+                    onClick={() => navigate(`/promoters${promoter.id}`)}
+                    sx={{ cursor: 'pointer' }}
+                >
+                    {promoter.name}
+                </Typography>
+            </Breadcrumbs>
             <Box sx={{maxHeight: "400px", overflow: "hidden"}}>
                 {
                     promoter.cover_photo_url

@@ -9,8 +9,11 @@ import * as React from "react";
 import {useRef} from "react";
 import Box from "@mui/material/Box";
 import EventsThisWeek, {EventsToday, EventsThisMonth} from "./EventsThisWeek";
-import {Tab, Tabs} from "@mui/material";
+import {IconButton, Tab, Tabs} from "@mui/material";
 import Card from "@mui/material/Card";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import HomeIcon from '@mui/icons-material/Home'
+import {navigate} from "../actions";
 
 export default function Events() {
     const ref = useRef<HTMLDivElement>(null);
@@ -22,7 +25,21 @@ export default function Events() {
     const [visibleTab, setVisibleTab] = React.useState("quarter")
     return (
         <>
-            <Typography variant="h4" gutterBottom>Events</Typography>
+            <Breadcrumbs
+                aria-label="breadcrumb"
+                sx={{ display: 'flex', alignItems: 'center', mb: 1, mt: 2 }}
+            >
+                <IconButton onClick={() => navigate('/home')}>
+                    <HomeIcon/>
+                </IconButton>
+                <Typography
+                    onClick={() => navigate('/events')}
+                    color={"primary"}
+                    sx={{ cursor: 'pointer' }}
+                >
+                    Events
+                </Typography>
+            </Breadcrumbs>
 
             <Tabs value={visibleTab}
                   sx={{mb: 2}}
