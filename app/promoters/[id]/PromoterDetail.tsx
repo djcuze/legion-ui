@@ -105,7 +105,7 @@ export default function PromoterDetail({promoter}) {
                     <Grid size={{xs: 12}}>
                         <Stack spacing={2}>
                             <Typography variant="overline" gutterBottom>
-                                Description
+                                About
                             </Typography>
                             <Typography variant="body1">{promoter.bio || '-'}</Typography>
                         </Stack>
