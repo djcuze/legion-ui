@@ -8,6 +8,9 @@ import {EventForm} from "../../components/EventForm";
 import * as React from "react";
 import {useRef} from "react";
 import Box from "@mui/material/Box";
+import EventsThisWeek, {EventsToday, EventsThisMonth} from "./EventsThisWeek";
+import {Tab, Tabs} from "@mui/material";
+import Card from "@mui/material/Card";
 
 export default function Events() {
     const ref = useRef<HTMLDivElement>(null);
@@ -16,11 +19,28 @@ export default function Events() {
     };
 
     const [selectedEvent, setSelectedEvent] = React.useState(undefined)
+    const [visibleTab, setVisibleTab] = React.useState("quarter")
     return (
         <>
-            <Typography variant="overline">Events</Typography>
+            <Typography variant="h4" gutterBottom>Events</Typography>
 
-            <UpcomingEvents setSelectedEvent={setSelectedEvent} scrollToForm={scrollToForm} />
+            <Tabs value={visibleTab}
+                  sx={{mb: 2}}
+                  onChange={() => setVisibleTab(visibleTab)} aria-label="disabled tabs example">
+                <Tab label="Quarter" value="quarter" onClick={() => setVisibleTab("quarter")}/>
+                <Tab label="Month" value="month" onClick={() => setVisibleTab("month")}/>
+                <Tab label="Week" value="week" onClick={() => setVisibleTab("week")}/>
+                <Tab label="Day" value={"day"} onClick={() => setVisibleTab("day")}/>
+            </Tabs>
+
+            <Card sx={{p: 2}}>
+                {visibleTab === "quarter" &&
+                  <UpcomingEvents setSelectedEvent={setSelectedEvent} scrollToForm={scrollToForm}/>}
+                {visibleTab === "month" && <EventsThisMonth setSelectedEvent={setSelectedEvent} scrollToForm={scrollToForm}/>}
+                {visibleTab === "week" &&
+                  <EventsThisWeek setSelectedEvent={setSelectedEvent} scrollToForm={scrollToForm}/>}
+                {visibleTab === "day" && <EventsToday setSelectedEvent={setSelectedEvent} scrollToForm={scrollToForm}/>}
+            </Card>
 
             <Divider className="font-sans" sx={{mt: 3}}>
                 <Chip color="primary" label="Register an event"/>

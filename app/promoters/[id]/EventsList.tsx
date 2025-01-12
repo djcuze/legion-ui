@@ -69,7 +69,7 @@ function IconLinks({event}) {
     )
 }
 
-function EventListItem({event, promoter}) {
+export function EventListItem({event, promoter}) {
     return (
         <ListItem
             sx={{px: 0, alignItems: "flex-start"}}>

@@ -14,7 +14,7 @@ import Avatar from "@mui/material/Avatar";
 import * as React from "react";
 import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
-import {IconButton} from "@mui/material";
+import {IconButton, Tab, Tabs} from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import Tooltip from "@mui/material/Tooltip";
@@ -22,7 +22,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import Link from "@mui/material/Link";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
-import Chip from "@mui/material/Chip";
 
 function IconLinks({event}) {
     return (
@@ -88,19 +87,19 @@ function EventListItem({event, setSelectedEvent, scrollToForm}) {
             onMouseOver={() => setShowActions(true)}
             onMouseLeave={() => setShowActions(false)}
             sx={{px: 0, alignItems: "flex-start"}}>
-            <ListItemAvatar sx={{margin: 0, mr: 1}}>
+            <ListItemAvatar sx={{margin: 0, mr: 1, width: "90px"}}>
                 <ListItemText
-                    primary={dayjs(event.start_time).format('ddd D')}
+                    primary={dayjs(event.start_time).format('ddd D MMM')}
                     slotProps={{primary: {fontSize: 16, fontWeight: 'medium'},}}/>
                 <ListItemText
                     primary={dayjs(event.start_time).format('hh:mm A')}
-                    slotProps={{primary: {fontSize: 12, fontWeight: 'medium'},}}/>
+                    slotProps={{primary: {fontSize: 14, fontWeight: 'medium'},}}/>
             </ListItemAvatar>
 
             <Avatar
                 alt={event.promoter.name}
-                src={event.promoter.avatar_url}
-                sx={{width: 42, height: 42, ml: 1, mr: 2}}
+                src={event.cover_photo_url || event.promoter.avatar_url}
+                sx={{width: 50, height: 50, ml: 1, mr: 2}}
             />
 
             <Box sx={{width: "100%"}}>
@@ -108,8 +107,7 @@ function EventListItem({event, setSelectedEvent, scrollToForm}) {
                     <Stack>
                         <Typography
                             variant={"body2"}
-                            fontSize={"small"}>
-
+                            fontSize={14}>
                             {event.title}
                         </Typography>
                         <Link
@@ -148,7 +146,7 @@ export const getUpcomingEvents = async () => {
     return response.json()
 }
 
-export default function UpcomingEvents({setSelectedEvent, scrollToForm}) {
+export default function EventsThisWeek({setSelectedEvent, scrollToForm}) {
     const {data, isFetching} = useQuery({
         queryKey: ['upcomingEvents'],
         queryFn: getUpcomingEvents,
@@ -161,28 +159,79 @@ export default function UpcomingEvents({setSelectedEvent, scrollToForm}) {
     if (!data) {
         return null
     }
-
-    const months = Object.keys(data.events)
+    const events =
+        Object
+            .values(data.events)
+            .flat(1)
+            // @ts-ignore
+            .filter(event => dayjs(event.start_time) >= dayjs().startOf('week') && dayjs(event.start_time) <= dayjs().endOf('week'))
 
     return (
-        <Grid container spacing={3}>
-            {months.map((month, index) => (
-                <Grid key={month} size={{xs: 12, md: 6, lg: 4}}>
-                    <Divider sx={{mb: 1}}>
-                        <Chip color={"info"} label={month}/>
-                    </Divider>
+        <Box sx={{fontSize: "10px", minHeight: "300px"}}>
+            {events.map(event => (
+                <EventListItem scrollToForm={scrollToForm} setSelectedEvent={setSelectedEvent} event={event}
+                    // @ts-ignore
+                               key={event.id}/>))}
+        </Box>
+    )
+}
 
-                    <List sx={{width: '100%'}} dense>
-                        {data.events[month].map(event => (
-                            <EventListItem
-                                key={event.id}
-                                event={event}
-                                scrollToForm={scrollToForm}
-                                setSelectedEvent={setSelectedEvent}/>
-                        ))}
-                    </List>
-                </Grid>
-            ))}
-        </Grid>
+export function EventsToday({setSelectedEvent, scrollToForm}) {
+    const {data, isFetching} = useQuery({
+        queryKey: ['upcomingEvents'],
+        queryFn: getUpcomingEvents,
+    })
+
+    if (isFetching) {
+        return <Loading/>
+    }
+
+    if (!data?.events) {
+        return null
+    }
+
+    const events =
+        Object
+            .values(data.events)
+            .flat(1)
+            // @ts-ignore
+            .filter(event => dayjs(event.start_time) >= dayjs().startOf('day') && dayjs(event.start_time) <= dayjs().endOf('day'))
+
+    return (
+        <Box sx={{fontSize: "10px", minHeight: "300px"}}>
+            {events.map(event => <EventListItem scrollToForm={scrollToForm} setSelectedEvent={setSelectedEvent}
+                // @ts-ignore
+                                                event={event} key={event.id}/>)}
+        </Box>
+    )
+}
+
+export function EventsThisMonth({setSelectedEvent, scrollToForm}) {
+    const {data, isFetching} = useQuery({
+        queryKey: ['upcomingEvents'],
+        queryFn: getUpcomingEvents,
+    })
+
+    if (isFetching) {
+        return <Loading/>
+    }
+
+    if (!data?.events) {
+        return null
+    }
+
+    const events =
+        Object
+            .values(data.events)
+            .flat(1)
+            // @ts-ignore
+            .filter(event => dayjs(event.start_time) >= dayjs().startOf('month') && dayjs(event.start_time) <= dayjs().endOf('month'))
+
+    return (
+        <Box sx={{fontSize: "10px", minHeight: "300px"}}>
+            {events.map(event => <EventListItem scrollToForm={scrollToForm} setSelectedEvent={setSelectedEvent}
+                // @ts-ignore
+                                                event={event} key={event.id}/>)}
+        </Box>
     )
 }
