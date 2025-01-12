@@ -7,7 +7,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import Divider from "@mui/material/Divider";
 import * as React from "react";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -24,21 +23,6 @@ import Tooltip from "@mui/material/Tooltip";
 export default function PromoterDetail({promoter}) {
     return (
         <>
-            <Breadcrumbs aria-label="breadcrumb" sx={{mb: 1}}>
-                <IconButton onClick={() => navigate('/')}>
-                    <HomeIcon/>
-                </IconButton>
-                <Link
-                    underline="hover"
-                    color="inherit"
-                    sx={{cursor: 'pointer'}}
-                    onClick={() => navigate('/network')}
-                >
-                    Network
-                </Link>
-                <Typography color="primary">{promoter.name}</Typography>
-            </Breadcrumbs>
-
             <Box sx={{maxHeight: "400px", overflow: "hidden"}}>
                 {
                     promoter.cover_photo_url
@@ -94,31 +78,31 @@ export default function PromoterDetail({promoter}) {
                 </Grid>
 
                 <Grid container spacing={2} sx={{mt: 2}}>
-                    <Grid size={{xs: 12, md: 3}}>
-                        <Stack spacing={2}>
-                            <Typography variant="overline" gutterBottom>
-                                Organisers
-                            </Typography>
-                            {promoter.users.length > 0 ? (
-                                promoter.users.map((member) => {
-                                    return (
-                                        <Box className="flex items-center" key={member.id}>
-                                            <Avatar
-                                                alt={member.name}
-                                                src={member.avatar_url}
-                                                sx={{width: 24, height: 24, mr: 1}}
-                                            />
-                                            {member.name}
-                                        </Box>
-                                    )
-                                })
-                            ) : (
-                                "-"
-                            )}
-                        </Stack>
-                    </Grid>
+                    {/*<Grid size={{xs: 12, md: 3}}>*/}
+                    {/*    <Stack spacing={2}>*/}
+                    {/*        <Typography variant="overline" gutterBottom>*/}
+                    {/*            Organisers*/}
+                    {/*        </Typography>*/}
+                    {/*        {promoter.users.length > 0 ? (*/}
+                    {/*            promoter.users.map((member) => {*/}
+                    {/*                return (*/}
+                    {/*                    <Box className="flex items-center" key={member.id}>*/}
+                    {/*                        <Avatar*/}
+                    {/*                            alt={member.name}*/}
+                    {/*                            src={member.avatar_url}*/}
+                    {/*                            sx={{width: 24, height: 24, mr: 1}}*/}
+                    {/*                        />*/}
+                    {/*                        {member.name}*/}
+                    {/*                    </Box>*/}
+                    {/*                )*/}
+                    {/*            })*/}
+                    {/*        ) : (*/}
+                    {/*            "-"*/}
+                    {/*        )}*/}
+                    {/*    </Stack>*/}
+                    {/*</Grid>*/}
 
-                    <Grid size={{xs: 12, md: 9}}>
+                    <Grid size={{xs: 12}}>
                         <Stack spacing={2}>
                             <Typography variant="overline" gutterBottom>
                                 Description
