@@ -71,7 +71,7 @@ export default function PromoterDetail({promoter}) {
                         </Stack>
                     </Grid>
 
-                    <Grid size={{xs: 3}}>
+                    <Grid size={{xs: 3, md: 6}}>
                         <Box className="flex flex-row items-center justify-end">
                             {promoter.facebook_url && (
                                 <Tooltip title={`${promoter.name} on Facebook`} arrow placement={"top"}>
@@ -93,11 +93,7 @@ export default function PromoterDetail({promoter}) {
                     </Grid>
                 </Grid>
 
-                <Divider>
-                    <Typography variant="overline">Details</Typography>
-                </Divider>
-
-                <Grid container spacing={2}>
+                <Grid container spacing={2} sx={{mt: 2}}>
                     <Grid size={{xs: 12, md: 3}}>
                         <Stack spacing={2}>
                             <Typography variant="overline" gutterBottom>
@@ -129,7 +125,6 @@ export default function PromoterDetail({promoter}) {
                             </Typography>
                             <Typography variant="body1">{promoter.bio || '-'}</Typography>
                         </Stack>
-                        <Divider sx={{mt: 3}}/>
                     </Grid>
 
 

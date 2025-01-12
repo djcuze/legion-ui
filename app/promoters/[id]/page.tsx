@@ -39,7 +39,7 @@ export default async function PromoterPage(
     // }
 
     return (
-        <Container sx={{mt: 10, mb: 8, pb: 3}} className="bg-white">
+        <Container sx={{mt: 10, mb: 3, pb: 3}} className="bg-white">
             <PromoterDetail promoter={promoter}/>
         </Container>
     )

@@ -14,8 +14,9 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import Divider from "@mui/material/Divider";
 import Loading from "../../../components/Loading";
-import Grid from "@mui/material/Grid2";
-import {useEffect, useState} from "react";
+import {useState} from "react";
+import Chip from "@mui/material/Chip";
+import {styled} from '@mui/material/styles';
 
 function IconLinks({event}) {
     return (
@@ -71,11 +72,11 @@ function IconLinks({event}) {
 function EventListItem({event, promoter}) {
     return (
         <ListItem
-            sx={{px: 0, alignItems: "center"}}>
-            <ListItemAvatar sx={{margin: 0}}>
+            sx={{px: 0, alignItems: "flex-start"}}>
+            <ListItemAvatar sx={{margin: 0, mr: 1}}>
                 <ListItemText
                     primary={dayjs(event.start_time).format('ddd D MMM')}
-                    slotProps={{primary: {fontSize: 18, fontWeight: 'bold'},}}/>
+                    slotProps={{primary: {fontSize: 18, fontWeight: 'medium'},}}/>
                 <ListItemText
                     primary={dayjs(event.start_time).format('hh:mm A')}
                     slotProps={{primary: {fontSize: 14, fontWeight: 'medium'},}}/>
@@ -91,7 +92,7 @@ function EventListItem({event, promoter}) {
                 <ListItemText sx={{m: 0}}>
                     <Typography
                         variant={"body2"}
-                        fontWeight={"bold"}
+                        fontWeight={"medium"}
                         fontSize={"medium"}>{event.title}</Typography>
                     {
                         event.ticket_url || event.facebook_url ? (
@@ -119,7 +120,7 @@ export const getPastEvents = async (promoterId) => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/promoters/${promoterId}/events`, {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify({ start_time: dayjs().subtract(1, 'month'), end_time: dayjs() })
+        body: JSON.stringify({start_time: dayjs().subtract(1, 'month'), end_time: dayjs()})
     })
 
     return response.json()
@@ -136,12 +137,68 @@ function PastEvents({promoter}) {
     }
 
     if (data.events.length === 0) {
-        return null
+        return <NoResults/>
     }
 
     return data.events.map(event => <EventListItem promoter={promoter} event={event} key={event.id}/>)
 }
 
+function NoResults() {
+    const StyledGridOverlay = styled('div')(({theme}) => ({
+        display: 'flex',
+        height: "200px",
+        backgroundColor: theme.palette.grey[100],
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        '& .no-rows-primary': {
+            fill: '#3D4751',
+            ...theme.applyStyles('light', {
+                fill: '#AEAEAE',
+            }),
+        },
+        '& .no-rows-secondary': {
+            fill: '#1D2126',
+            ...theme.applyStyles('light', {
+                fill: '#D1D1D1',
+            }),
+        },
+    }));
+
+
+    return (
+        <StyledGridOverlay>
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                width={96}
+                viewBox="0 0 452 257"
+                aria-hidden
+                focusable="false"
+            >
+                <path
+                    className="no-rows-primary"
+                    d="M348 69c-46.392 0-84 37.608-84 84s37.608 84 84 84 84-37.608 84-84-37.608-84-84-84Zm-104 84c0-57.438 46.562-104 104-104s104 46.562 104 104-46.562 104-104 104-104-46.562-104-104Z"
+                />
+                <path
+                    className="no-rows-primary"
+                    d="M308.929 113.929c3.905-3.905 10.237-3.905 14.142 0l63.64 63.64c3.905 3.905 3.905 10.236 0 14.142-3.906 3.905-10.237 3.905-14.142 0l-63.64-63.64c-3.905-3.905-3.905-10.237 0-14.142Z"
+                />
+                <path
+                    className="no-rows-primary"
+                    d="M308.929 191.711c-3.905-3.906-3.905-10.237 0-14.142l63.64-63.64c3.905-3.905 10.236-3.905 14.142 0 3.905 3.905 3.905 10.237 0 14.142l-63.64 63.64c-3.905 3.905-10.237 3.905-14.142 0Z"
+                />
+                <path
+                    className="no-rows-secondary"
+                    d="M0 10C0 4.477 4.477 0 10 0h380c5.523 0 10 4.477 10 10s-4.477 10-10 10H10C4.477 20 0 15.523 0 10ZM0 59c0-5.523 4.477-10 10-10h231c5.523 0 10 4.477 10 10s-4.477 10-10 10H10C4.477 69 0 64.523 0 59ZM0 106c0-5.523 4.477-10 10-10h203c5.523 0 10 4.477 10 10s-4.477 10-10 10H10c-5.523 0-10-4.477-10-10ZM0 153c0-5.523 4.477-10 10-10h195.5c5.523 0 10 4.477 10 10s-4.477 10-10 10H10c-5.523 0-10-4.477-10-10ZM0 200c0-5.523 4.477-10 10-10h203c5.523 0 10 4.477 10 10s-4.477 10-10 10H10c-5.523 0-10-4.477-10-10ZM0 247c0-5.523 4.477-10 10-10h231c5.523 0 10 4.477 10 10s-4.477 10-10 10H10c-5.523 0-10-4.477-10-10Z"
+                />
+            </svg>
+            <Typography sx={{mt: 2}} variant="subtitle2">
+                No events
+            </Typography>
+        </StyledGridOverlay>
+    )
+}
 
 function FutureEvents({promoter}) {
     const {data, isFetching} = useQuery({
@@ -153,13 +210,11 @@ function FutureEvents({promoter}) {
         return <Loading/>
     }
 
-    const excludingNextUp = data.events.filter(event => dayjs(event.start_time) >= dayjs().startOf('day')).slice(1)
-
-    if (excludingNextUp.length === 0) {
-        return null
+    if (data.events.length === 0) {
+        return <NoResults/>
     }
 
-    return excludingNextUp.map(event => <EventListItem promoter={promoter} event={event} key={event.id}/>)
+    return data.events.map(event => <EventListItem promoter={promoter} event={event} key={event.id}/>)
 }
 
 export default function EventsList({promoter}) {
@@ -178,10 +233,15 @@ export default function EventsList({promoter}) {
 
     return (
         <>
-            <Typography variant="overline">Next up</Typography>
-            <EventListItem promoter={promoter} event={nextEvent} key={nextEvent.id}/>
+            {nextEvent && (
+                <>
+                    <Divider sx={{my: 3}}>
+                        <Chip color="info" label={<Typography variant="button" fontSize="11px">Next up</Typography>}/>
+                    </Divider>
 
-            <Divider variant="middle" sx={{mb: 2}}/>
+                    <EventListItem promoter={promoter} event={nextEvent} key={nextEvent.id}/>
+                </>
+            )}
 
             <Tabs value={isShowingFutureEvents ? 0 : 1}
                   sx={{mb: 2}}
@@ -190,11 +250,13 @@ export default function EventsList({promoter}) {
                 <Tab label="Past"/>
             </Tabs>
 
-            {
-                isShowingFutureEvents
-                    ? <FutureEvents promoter={promoter}/>
-                    : <PastEvents promoter={promoter}/>
-            }
+            <Box sx={{fontSize: "10px", minHeight: "300px"}}>
+                {
+                    isShowingFutureEvents
+                        ? <FutureEvents promoter={promoter}/>
+                        : <PastEvents promoter={promoter}/>
+                }
+            </Box>
         </>
     )
 }
