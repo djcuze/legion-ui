@@ -180,7 +180,7 @@ function EventListItem({event, setSelectedEvent, scrollToForm}) {
             </Box>
             {
                 showActions ? (
-                    <IconButton aria-label="edit" size="small" onClick={handleOnClick}>
+                    <IconButton aria-label="edit" size="small" onClick={handleOnClick} sx={{mr: -1.7}}>
                         <EditIcon fontSize={"inherit"}/>
                     </IconButton>
                 ) : null
