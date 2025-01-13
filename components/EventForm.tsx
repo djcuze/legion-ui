@@ -16,48 +16,11 @@ import {useSnackbar} from "notistack";
 import useCurrentUser from "../hooks/useCurrentUser";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import InputLabel from "@mui/material/InputLabel";
-import NativeSelect from "@mui/material/NativeSelect";
-import {getNetworkPromoters} from "../app/network/Network";
 import Link from "@mui/material/Link";
 import CoverPhotoUpload from "../app/events/CoverPhotoUpload";
 import Divider from "@mui/material/Divider";
-import type {PutBlobResult} from "@vercel/blob";
 import Image from 'next/image'
-
-
-function PromoterOptions({networkId}) {
-    const [promoterOptions, setPromoterOptions] = useState([]);
-
-    useEffect(() => {
-        getNetworkPromoters(networkId)
-            .then(data => {
-                setPromoterOptions(
-                    data
-                        .promoters
-                        .map((promoter) => ({value: promoter.id, label: promoter.name}))
-                );
-            })
-    }, [networkId]);
-
-
-    return (
-        <>
-            <option/>
-            {promoterOptions.length > 0 && promoterOptions.map((promoterOption, index) => (
-                <option
-                    key={index}
-                    // @ts-ignore
-                    value={promoterOption.value}>
-                    {
-                        // @ts-ignore
-                        promoterOption.label
-                    }
-                </option>
-            ))}
-        </>
-    )
-}
+import CustomMultiSelect from "./CustomMultiSelect";
 
 export const EventForm = ({selectedEvent, setSelectedEvent}) => {
     const {enqueueSnackbar} = useSnackbar();
@@ -69,14 +32,13 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
 
     const defaultFormData = {
         title: "",
-        promoter_id: "",
+        promoter_ids: [],
         start_time: start_time,
         facebook_url: "",
         ticket_url: "",
         password: "",
         cover_photo_url: ""
     }
-
     const [formData, setFormData] = useState(defaultFormData);
     const queryClient = useQueryClient()
 
@@ -86,7 +48,9 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
         }
         setFormData({
             title: selectedEvent.title,
-            promoter_id: selectedEvent.promoter.id,
+            promoter_ids: selectedEvent.promoters.map(p => (
+                {label: p.name, value: p.id}
+            )),
             start_time: dayjs(selectedEvent.start_time),
             facebook_url: selectedEvent.facebook_url || "",
             ticket_url: selectedEvent.ticket_url || "",
@@ -103,7 +67,8 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
 
         return (
             formData.title === selectedEvent.title &&
-            formData.promoter_id === selectedEvent.promoter.id &&
+            // @ts-ignore
+            formData.promoter_ids.map(id => id.value) === selectedEvent.promoters.map(p => p.id) &&
             formData.facebook_url === selectedEvent.facebook_url &&
             formData.ticket_url === selectedEvent.ticket_url &&
             formData.cover_photo_url === selectedEvent.cover_photo_url &&
@@ -117,15 +82,17 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
             enqueueSnackbar("You haven't made any changes", {variant: "warning", autoHideDuration: 2700})
             return
         }
-        mutation.mutate(formData)
+        // @ts-ignore
+        const promoterIds = formData.promoter_ids.map(p => p.value)
+        mutation.mutate({...formData, promoter_ids: promoterIds})
     }
 
-    const updateEvent = async (e) => {
+    const updateEvent = async (params) => {
         const headers = await getHeaders()
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${selectedEvent.id}`, {
             method: "PUT",
             headers: headers,
-            body: JSON.stringify({event: formData})
+            body: JSON.stringify({event: params})
         }).then(resp => {
             if (!resp.ok) {
                 return resp.json().then(err => {
@@ -172,10 +139,14 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
         }
     })
 
-    const handleOnInput = (e) => {
+    function handleOnInput(e){
         setFormData({...formData, [e.target.name]: e.target.value})
 
         if (e.target.name === "password") {
+            setIsDisabled(false)
+        }
+
+        if (e.target.name === "promoter_ids") {
             setIsDisabled(false)
         }
 
@@ -208,7 +179,7 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
 
         const file = e.target.files[0];
 
-        const response = await fetch(
+        await fetch(
             `/events/upload?filename=${file.name}`,
             {
                 method: 'POST',
@@ -262,21 +233,7 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
                             </Grid>
 
                             <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                                        Promoter *
-                                    </InputLabel>
-                                    <NativeSelect
-                                        value={formData.promoter_id}
-                                        onChange={handleOnInput}
-                                        inputProps={{
-                                            name: 'promoter_id',
-                                            id: 'uncontrolled-native',
-                                        }}
-                                    >
-                                        {currentUser && <PromoterOptions networkId={currentUser.network_id}/>}
-                                    </NativeSelect>
-                                </FormControl>
+                                {currentUser && <CustomMultiSelect networkId={currentUser.network_id} formData={formData} handleOnInput={handleOnInput}/>}
                             </Grid>
 
                             {

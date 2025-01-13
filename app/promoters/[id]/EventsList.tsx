@@ -17,6 +17,7 @@ import Loading from "../../../components/Loading";
 import {useState} from "react";
 import Chip from "@mui/material/Chip";
 import {styled} from '@mui/material/styles';
+import Link from "@mui/material/Link";
 
 function IconLinks({event}) {
     return (
@@ -94,12 +95,28 @@ export function EventListItem({event, promoter}) {
                         variant={"body2"}
                         fontWeight={"medium"}
                         fontSize={"medium"}>{event.title}</Typography>
-                    {
-                        event.ticket_url || event.facebook_url ? (
-                            <IconLinks event={event}/>
-                        ) : null
-                    }
                 </ListItemText>
+
+                {event.promoters.length > 1 && event.promoters.map((promoter, index) => (
+                    <React.Fragment key={promoter.id}>
+                        <Link
+                            underline={"hover"}
+                            key={promoter.id}
+                            variant={"body2"}
+                            fontWeight={"medium"}
+                            href={`/promoters/${promoter.id}`}
+                            fontSize={"small"}>
+                            {promoter.name}
+                        </Link>
+                        {index !== (event.promoters.length - 1) && ", "}
+                    </React.Fragment>
+                ))}
+
+                {
+                    event.ticket_url || event.facebook_url ? (
+                        <IconLinks event={event}/>
+                    ) : null
+                }
             </Box>
         </ListItem>
     )

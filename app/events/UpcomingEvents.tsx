@@ -12,9 +12,9 @@ import {getHeaders} from "../actions";
 import Loading from "../../components/Loading";
 import Avatar from "@mui/material/Avatar";
 import * as React from "react";
-import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
-import {IconButton} from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import AvatarGroup from "@mui/material/AvatarGroup";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import Tooltip from "@mui/material/Tooltip";
@@ -84,13 +84,34 @@ function EventListItem({event, setSelectedEvent, scrollToForm}) {
     }
 
     const isVisible = dayjs(event.start_time).endOf("day") > dayjs().startOf("day");
+    const AVATAR_SIZE = () => {
+        switch (event.promoters.length) {
+            case 1:
+                return 54
+            case 2:
+                return 35
+            default:
+                return 30
+        }
+    }
+    const AVATAR_SPACING = () => {
+        switch (event.promoters.length) {
+            case 1:
+                return 20
+            case 2:
+                return 14
+            default:
+                return 15
+        }
+    }
 
     return (
         <ListItem
             onMouseOver={() => setShowActions(true)}
             onMouseLeave={() => setShowActions(false)}
             sx={{px: 0, alignItems: "flex-start", opacity: isVisible ? 1 : 0.25}}>
-            <ListItemAvatar sx={{margin: 0, mr: 1}}>
+
+            <ListItemAvatar sx={{margin: 0}}>
                 <ListItemText
                     primary={dayjs(event.start_time).format('ddd D')}
                     slotProps={{primary: {fontSize: 16, fontWeight: 'medium'},}}/>
@@ -99,11 +120,31 @@ function EventListItem({event, setSelectedEvent, scrollToForm}) {
                     slotProps={{primary: {fontSize: 12, fontWeight: 'medium'},}}/>
             </ListItemAvatar>
 
-            <Avatar
-                alt={event.promoter.name}
-                src={event.promoter.avatar_url}
-                sx={{width: 42, height: 42, ml: 1, mr: 2}}
-            />
+            <Box sx={{width: "170px", display: "flex"}}>
+                <AvatarGroup
+                    max={3}
+                    sx={{
+                        px: 1,
+                        '& .MuiAvatar-root': {
+                            width: AVATAR_SIZE(),
+                            height: AVATAR_SIZE(),
+                            fontSize: 12
+                        }
+                    }}
+                    renderSurplus={(surplus) => <span style={{marginLeft: "10px"}}>+{surplus}</span>}
+                    spacing={AVATAR_SPACING()}>
+                    {
+                        event.promoters.map(promoter => (
+                            <Avatar
+                                key={promoter.id}
+                                alt={promoter.name}
+                                src={promoter.avatar_url}
+                                sx={{width: AVATAR_SIZE(), height: AVATAR_SIZE()}}
+                            />
+                        ))
+                    }
+                </AvatarGroup>
+            </Box>
 
             <Box sx={{width: "100%"}}>
                 <ListItemText sx={{m: 0}}>
@@ -114,13 +155,21 @@ function EventListItem({event, setSelectedEvent, scrollToForm}) {
 
                             {event.title}
                         </Typography>
-                        <Link
-                            underline="hover"
-                            href={`/promoters/${event.promoter.id}`}
-                            variant={"subtitle1"}
-                            fontSize={"small"}>
-                            {event.promoter.name}
-                        </Link>
+                        <Box sx={{width: "100%", maxWidth: "350px"}}>
+                            {
+                                event.promoters.map((promoter, index) => (
+                                    <Link
+                                        key={promoter.id}
+                                        underline="hover"
+                                        href={`/promoters/${promoter.id}`}
+                                        variant={"subtitle1"}
+                                        fontSize={"small"}>
+                                        {promoter.name}
+                                        {index !== (event.promoters.length - 1) && ", "}
+                                    </Link>
+                                ))
+                            }
+                        </Box>
                     </Stack>
                     {
                         event.ticket_url || event.facebook_url ? (
