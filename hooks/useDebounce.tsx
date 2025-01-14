@@ -13,6 +13,6 @@ export const useDebounce = (callback) => {
             ref.current?.();
         };
 
-        return debounce(func, 800);
+        return debounce(func, 600);
     }, []);
 };

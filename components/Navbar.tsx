@@ -25,6 +25,9 @@ import {useQuery} from "@tanstack/react-query";
 import {getNetworkPromoters} from "../app/network/Network";
 import {useEffect} from "react";
 import {useDebounce} from "../hooks/useDebounce";
+import Avatar from "@mui/material/Avatar";
+import ListItem from "@mui/material/ListItem";
+import {redirect} from "next/navigation";
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -56,7 +59,7 @@ const StyledTextField = styled(TextField)(({theme}) => ({
     background: "rgba(255, 255, 255, 0.15)",
     borderRadius: "4px",
     width: "100%",
-    minWidth: "200px",
+    minWidth: "250px",
     "& input": {
         color: "#fff !important"
     },
@@ -88,23 +91,6 @@ function ResponsiveAppBar({isLoggedIn, currentUser}) {
     const [searchResults, setSearchResults] = React.useState([]);
     const [searchQuery, setSearchQuery] = React.useState(null);
 
-    const {data, isFetching} = useQuery({
-        queryKey: ['networkPromoters'],
-        queryFn: () => getNetworkPromoters(currentUser.network_id),
-    })
-
-    useEffect(() => {
-
-    }, []);
-
-    const settings = isLoggedIn ? [
-        {label: "Profile", onClick: () => navigate("/profile")},
-        {label: "Logout", onClick: logOut}
-    ] : [
-        {label: "Login", onClick: () => navigate("/login")},
-        {label: "Sign up for an account", onClick: () => navigate("/register")},
-    ];
-
     const pages = isLoggedIn ? [
         {title: "Home", href: "/"},
         {title: "Events", href: "/events"},
@@ -135,9 +121,9 @@ function ResponsiveAppBar({isLoggedIn, currentUser}) {
         setAnchorElNav(null);
     };
 
-    const searchPromoters = async (q) => {
+    const searchPromotersAndEvents = async (q) => {
         const headers = await getHeaders()
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/search/promoters`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/search`, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({q})
@@ -147,8 +133,13 @@ function ResponsiveAppBar({isLoggedIn, currentUser}) {
     }
 
     const debouncedRequest = useDebounce(() => {
-        searchPromoters(searchQuery).then((data) => {
-            if (!data) return
+        // @ts-ignore
+        if (!searchQuery || searchQuery?.length < 1) {
+            return null
+        }
+
+        searchPromotersAndEvents(searchQuery).then((data) => {
+            if (!data || !data.results) return
             setSearchResults(data.results)
         })
     });
@@ -158,6 +149,19 @@ function ResponsiveAppBar({isLoggedIn, currentUser}) {
         const value = e.target.value
         setSearchQuery(value)
         debouncedRequest();
+    }
+
+    function handleOnSearchClick(option) {
+        setSearchQuery(null)
+        setSearchResults([])
+
+        switch (option.type) {
+            case "promoter":
+                return navigate(`/promoters/${option.value}`)
+            case "event":
+                // @ts-ignore
+                return redirect(option.facebook_url, 'push')
+        }
     }
 
     return (
@@ -228,10 +232,44 @@ function ResponsiveAppBar({isLoggedIn, currentUser}) {
 
                         <Autocomplete
                             freeSolo
+                            clearOnBlur
+                            selectOnFocus
+                            noOptionsText={"No results"}
                             id="search-autocomplete"
-                            disableClearable
-
                             options={searchResults}
+                            value={searchQuery}
+                            renderOption={(props, option, {selected}) => {
+                                const {key, ...optionProps} = props;
+                                return (
+                                    <ListItem sx={{cursor: "pointer"}}
+                                              key={key}
+                                              {...optionProps}
+                                              onClick={() => handleOnSearchClick(option)}>
+                                        <Avatar
+                                            sx={{mr: 1, width: 25, height: 25}}
+                                            // @ts-ignore
+                                            src={option.avatar_url}/>
+                                        <Box
+                                            sx={(t) => ({
+                                                flexGrow: 1,
+                                                '& span': {
+                                                    color: '#8b949e',
+                                                    ...t.applyStyles('light', {
+                                                        color: '#586069',
+                                                    }),
+                                                },
+                                            })}
+                                        >
+                                            <Typography fontSize={14}>
+                                                {
+                                                    // @ts-ignore
+                                                    option.label
+                                                }
+                                            </Typography>
+                                        </Box>
+                                    </ListItem>
+                                );
+                            }}
                             renderInput={(params) => (
                                 <StyledTextField
                                     {...params}
@@ -251,36 +289,6 @@ function ResponsiveAppBar({isLoggedIn, currentUser}) {
                             )}
                         />
                     </Search>
-                    {/*<Box sx={{flexGrow: 0}}>*/}
-                    {/*    <Tooltip title="Open settings">*/}
-                    {/*        <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>*/}
-                    {/*            {currentUser && <Avatar alt={currentUser.name} src={currentUser.avatar_url}/>}*/}
-                    {/*        </IconButton>*/}
-                    {/*    </Tooltip>*/}
-                    {/*    <Menu*/}
-                    {/*        sx={{mt: '45px'}}*/}
-                    {/*        id="menu-appbar"*/}
-                    {/*        anchorEl={anchorElUser}*/}
-                    {/*        anchorOrigin={{*/}
-                    {/*            vertical: 'top',*/}
-                    {/*            horizontal: 'right',*/}
-                    {/*        }}*/}
-                    {/*        keepMounted*/}
-                    {/*        transformOrigin={{*/}
-                    {/*            vertical: 'top',*/}
-                    {/*            horizontal: 'right',*/}
-                    {/*        }}*/}
-                    {/*        open={Boolean(anchorElUser)}*/}
-                    {/*        onClose={handleCloseUserMenu}*/}
-                    {/*    >*/}
-                    {/*        {settings.map((setting) => (*/}
-                    {/*            <MenuItem key={setting.label} onClick={handleCloseUserMenu}>*/}
-                    {/*                <Typography sx={{textAlign: 'center'}}*/}
-                    {/*                            onClick={setting.onClick}>{setting.label}</Typography>*/}
-                    {/*            </MenuItem>*/}
-                    {/*        ))}*/}
-                    {/*    </Menu>*/}
-                    {/*</Box>*/}
                 </Toolbar>
             </Container>
         </AppBar>
