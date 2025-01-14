@@ -74,7 +74,7 @@ export function EventListItem({event, promoter}) {
     return (
         <ListItem
             sx={{px: 0, alignItems: "flex-start"}}>
-            <ListItemAvatar sx={{margin: 0, mr: 1}}>
+            <ListItemAvatar sx={{margin: 0, mr: 1, width: "90px"}}>
                 <ListItemText
                     primary={dayjs(event.start_time).format('ddd D MMM')}
                     slotProps={{primary: {fontSize: 18, fontWeight: 'medium'},}}/>
