@@ -216,7 +216,7 @@ export default function UpcomingEvents({setSelectedEvent, scrollToForm}) {
     const months = Object.keys(data.events)
 
     return (
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{p: 2}}>
             {months.map((month, index) => (
                 <Grid key={month} size={{xs: 12, md: 6, lg: 4}}>
                     <Divider sx={{mb: 1}}>

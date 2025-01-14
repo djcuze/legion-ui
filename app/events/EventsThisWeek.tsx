@@ -23,6 +23,7 @@ import Link from "@mui/material/Link";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import AvatarGroup from "@mui/material/AvatarGroup";
+import {NoResults} from "../promoters/[id]/EventsList";
 
 function IconLinks({event}) {
     return (
@@ -208,8 +209,9 @@ export default function EventsThisWeek({setSelectedEvent, scrollToForm}) {
     }
 
     if (!data) {
-        return null
+        return <NoResults />
     }
+
     const events =
         Object
             .values(data.events)
@@ -218,7 +220,7 @@ export default function EventsThisWeek({setSelectedEvent, scrollToForm}) {
             .filter(event => dayjs(event.start_time) >= dayjs().startOf('week') && dayjs(event.start_time) <= dayjs().endOf('week'))
 
     return (
-        <Box sx={{fontSize: "10px", minHeight: "300px"}}>
+        <Box sx={{fontSize: "10px", minHeight: "300px", p: 2}}>
             {events.map(event => (
                 <EventListItem scrollToForm={scrollToForm} setSelectedEvent={setSelectedEvent} event={event}
                     // @ts-ignore
@@ -248,8 +250,12 @@ export function EventsToday({setSelectedEvent, scrollToForm}) {
             // @ts-ignore
             .filter(event => dayjs(event.start_time) >= dayjs().startOf('day') && dayjs(event.start_time) <= dayjs().endOf('day'))
 
+    if (!events.length) {
+        return <NoResults />
+    }
+
     return (
-        <Box sx={{fontSize: "10px", minHeight: "300px"}}>
+        <Box sx={{fontSize: "10px", minHeight: "300px", p: 2}}>
             {events.map(event => <EventListItem scrollToForm={scrollToForm} setSelectedEvent={setSelectedEvent}
                 // @ts-ignore
                                                 event={event} key={event.id}/>)}
@@ -268,7 +274,7 @@ export function EventsThisMonth({setSelectedEvent, scrollToForm}) {
     }
 
     if (!data?.events) {
-        return null
+        return <NoResults/>
     }
 
     const events =
@@ -282,7 +288,7 @@ export function EventsThisMonth({setSelectedEvent, scrollToForm}) {
 
 
     return (
-        <Box sx={{fontSize: "10px", minHeight: "300px"}}>
+        <Box sx={{fontSize: "10px", minHeight: "300px", p: 2}}>
             {events.map(event => <EventListItem scrollToForm={scrollToForm} setSelectedEvent={setSelectedEvent}
                                                 isVisible={isVisible}
                 // @ts-ignore

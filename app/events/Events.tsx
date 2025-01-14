@@ -64,7 +64,7 @@ export default function Events() {
                 <Tab label="Day" value={"day"} onClick={() => setVisibleTab("day")}/>
             </Tabs>
 
-            <Card sx={{p: 2}}>
+            <Card>
                 {visibleTab === "quarter" &&
                   <UpcomingEvents setSelectedEvent={setSelectedEvent} scrollToForm={scrollToForm}/>}
                 {visibleTab === "month" &&
