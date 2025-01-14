@@ -165,7 +165,7 @@ export function NoResults() {
         return ({
             display: 'flex',
             height: "300px",
-            backgroundColor: theme.palette.grey[100],
+            backgroundColor: '#ecebea',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
