@@ -44,6 +44,9 @@ function getQueryClient() {
 const theme = createTheme({
     palette: {
         mode: 'light',
+        background: {
+            paper: '#faf9f8'
+        }
     },
 });
 

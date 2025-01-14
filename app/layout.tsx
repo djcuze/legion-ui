@@ -33,7 +33,7 @@ export default async function RootLayout({
         <head>
             <title>Legion Events</title>
         </head>
-        <body className="mb-6 bg-[#fafafa]">
+        <body className="mb-6 bg-[#F4F3F2]">
         <Providers currentUser={currentUser}>
             <Box className="flex flex-col">
                 <Navbar isLoggedIn={isLoggedIn} currentUser={currentUser} />
