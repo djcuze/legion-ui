@@ -163,7 +163,7 @@ function PastEvents({promoter}) {
 function NoResults() {
     const StyledGridOverlay = styled('div')(({theme}) => ({
         display: 'flex',
-        height: "200px",
+        height: "300px",
         backgroundColor: theme.palette.grey[100],
         flexDirection: 'column',
         alignItems: 'center',
