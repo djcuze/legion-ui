@@ -111,7 +111,7 @@ function EventListItem({event, setSelectedEvent, scrollToForm}) {
             onMouseLeave={() => setShowActions(false)}
             sx={{px: 0, alignItems: "flex-start", opacity: isVisible ? 1 : 0.25}}>
 
-            <ListItemAvatar sx={{margin: 0}}>
+            <ListItemAvatar sx={{margin: 0, minWidth: "70px"}}>
                 <ListItemText
                     primary={dayjs(event.start_time).format('ddd D')}
                     slotProps={{primary: {fontSize: 16, fontWeight: 'medium'},}}/>
@@ -120,7 +120,7 @@ function EventListItem({event, setSelectedEvent, scrollToForm}) {
                     slotProps={{primary: {fontSize: 12, fontWeight: 'medium'},}}/>
             </ListItemAvatar>
 
-            <Box sx={{width: "170px", display: "flex"}}>
+            <Box sx={{minWidth: "90px", display: "flex"}}>
                 <AvatarGroup
                     max={3}
                     sx={{

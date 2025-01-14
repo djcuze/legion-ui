@@ -110,7 +110,7 @@ function EventListItem({event, setSelectedEvent, scrollToForm, isVisible = (even
             onMouseOver={() => setShowActions(true)}
             onMouseLeave={() => setShowActions(false)}
             sx={{px: 0, alignItems: "flex-start", opacity: isVisible(event) ? 1 : 0.25}}>
-            <ListItemAvatar sx={{margin: 0}}>
+            <ListItemAvatar sx={{margin: 0, minWidth: "80px"}}>
                 <ListItemText
                     primary={dayjs(event.start_time).format('ddd D MMM')}
                     slotProps={{primary: {fontSize: 15, fontWeight: 'medium'},}}/>
@@ -119,7 +119,7 @@ function EventListItem({event, setSelectedEvent, scrollToForm, isVisible = (even
                     slotProps={{primary: {fontSize: 14, fontWeight: 'medium'},}}/>
             </ListItemAvatar>
 
-            <Box sx={{width: "120px", display: "flex"}}>
+            <Box sx={{minWidth: "100px", display: "flex", overflow: "hidden"}}>
                 <AvatarGroup
                     max={3}
                     sx={{
