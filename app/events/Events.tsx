@@ -16,6 +16,7 @@ import HomeIcon from '@mui/icons-material/Home'
 import {navigate} from "../actions";
 import Grid from "@mui/material/Grid2";
 import Button from "@mui/material/Button";
+import AddCircleOutlined from "@mui/icons-material/AddCircleOutlined";
 
 export default function Events() {
     const ref = useRef<HTMLDivElement>(null);
@@ -48,7 +49,7 @@ export default function Events() {
 
                 <Grid size={{xs: 6}}>
                     <Box sx={{width: "100%"}}>
-                        <Button variant={"contained"} onClick={scrollToForm} sx={{float: "right"}}>
+                        <Button variant={"contained"} onClick={scrollToForm} sx={{float: "right"}} startIcon={<AddCircleOutlined/>}>
                             Register event
                         </Button>
                     </Box>
