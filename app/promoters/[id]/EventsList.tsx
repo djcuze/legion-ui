@@ -18,6 +18,7 @@ import {useState} from "react";
 import Chip from "@mui/material/Chip";
 import {styled} from '@mui/material/styles';
 import Link from "@mui/material/Link";
+import Card from "@mui/material/Card";
 
 function IconLinks({event}) {
     return (
@@ -157,7 +158,11 @@ function PastEvents({promoter}) {
         return <NoResults/>
     }
 
-    return data.events.map(event => <EventListItem promoter={promoter} event={event} key={event.id}/>)
+    return (
+        <Box sx={{p: 2}}>
+            {data.events.map(event => <EventListItem promoter={promoter} event={event} key={event.id}/>)}
+        </Box>
+    )
 }
 
 export function NoResults() {
@@ -233,7 +238,11 @@ function FutureEvents({promoter}) {
         return <NoResults/>
     }
 
-    return data.events.map(event => <EventListItem promoter={promoter} event={event} key={event.id}/>)
+    return (
+        <Box sx={{p: 2}}>
+            {data.events.map(event => <EventListItem promoter={promoter} event={event} key={event.id}/>)}
+        </Box>
+    )
 }
 
 export default function EventsList({promoter}) {
@@ -258,9 +267,9 @@ export default function EventsList({promoter}) {
                         <Chip color="info" label={<Typography variant="button" fontSize="11px">Next up</Typography>}/>
                     </Divider>
 
-                    <Box sx={{mb: 2}}>
+                    <Card sx={{mb: 2, px: 2, py: 1.5}}>
                         <EventListItem promoter={promoter} event={nextEvent} key={nextEvent.id}/>
-                    </Box>
+                    </Card>
                 </>
             )}
 
@@ -271,13 +280,13 @@ export default function EventsList({promoter}) {
                 <Tab label="Past"/>
             </Tabs>
 
-            <Box sx={{fontSize: "10px", minHeight: "300px"}}>
+            <Card sx={{fontSize: "10px", minHeight: "300px"}}>
                 {
                     isShowingFutureEvents
                         ? <FutureEvents promoter={promoter}/>
                         : <PastEvents promoter={promoter}/>
                 }
-            </Box>
+            </Card>
         </>
     )
 }

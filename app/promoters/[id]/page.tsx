@@ -22,7 +22,7 @@ export default async function PromoterPage(
     const promoter = await getPromoter(id)
 
     return (
-        <Container sx={{mt: 10, mb: 3, pb: 3}} className="bg-white">
+        <Container sx={{mt: 10, mb: 3, pb: 3}}>
             <PromoterDetail promoter={promoter}/>
         </Container>
     )

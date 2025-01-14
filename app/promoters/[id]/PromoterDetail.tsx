@@ -95,42 +95,6 @@ export default function PromoterDetail({promoter}) {
                             }
                         </Box>
                     </Grid>
-                </Grid>
-
-                <Grid container spacing={2} sx={{mt: 2}}>
-                    {/*<Grid size={{xs: 12, md: 3}}>*/}
-                    {/*    <Stack spacing={2}>*/}
-                    {/*        <Typography variant="overline" gutterBottom>*/}
-                    {/*            Organisers*/}
-                    {/*        </Typography>*/}
-                    {/*        {promoter.users.length > 0 ? (*/}
-                    {/*            promoter.users.map((member) => {*/}
-                    {/*                return (*/}
-                    {/*                    <Box className="flex items-center" key={member.id}>*/}
-                    {/*                        <Avatar*/}
-                    {/*                            alt={member.name}*/}
-                    {/*                            src={member.avatar_url}*/}
-                    {/*                            sx={{width: 24, height: 24, mr: 1}}*/}
-                    {/*                        />*/}
-                    {/*                        {member.name}*/}
-                    {/*                    </Box>*/}
-                    {/*                )*/}
-                    {/*            })*/}
-                    {/*        ) : (*/}
-                    {/*            "-"*/}
-                    {/*        )}*/}
-                    {/*    </Stack>*/}
-                    {/*</Grid>*/}
-
-                    <Grid size={{xs: 12}}>
-                        <Stack spacing={2}>
-                            <Typography variant="overline" gutterBottom>
-                                About
-                            </Typography>
-                            <Typography variant="body1">{promoter.bio || '-'}</Typography>
-                        </Stack>
-                    </Grid>
-
 
                     <Grid size={{xs: 0, md: 3}} sx={{display: {xs: 'none', md: 'block'}}}>
                     </Grid>
