@@ -22,6 +22,8 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import IconButton from "@mui/material/IconButton";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import Stack from "@mui/material/Stack";
+import HomeIcon from "@mui/icons-material/Home";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 
 export const getNetworkPromoters = async (networkId) => {
     const headers = await getHeaders()
@@ -64,8 +66,21 @@ export default function Network() {
     }
 
     return (
-        <Container sx={{mt: 10, mb: 8}}>
-            <Typography variant="overline">Network</Typography>
+        <>
+            <Breadcrumbs
+                aria-label="breadcrumb"
+                sx={{ display: 'flex', alignItems: 'center', mb: 1, mt: 2 }}
+            >
+                <IconButton onClick={() => navigate('/home')}>
+                    <HomeIcon/>
+                </IconButton>
+                <Typography
+                    onClick={() => navigate('/network')}
+                    sx={{ cursor: 'pointer' }}
+                >
+                    Network
+                </Typography>
+            </Breadcrumbs>
 
             <Card sx={{p: 2}}>
                 <Typography variant="h5" fontWeight={"bold"}>{data.network.name}</Typography>
@@ -101,6 +116,6 @@ export default function Network() {
                     ))}
                 </List>
             </Card>
-        </Container>
+        </>
     )
 }

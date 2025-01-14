@@ -32,7 +32,7 @@ export default function Events() {
                 <Grid size={{xs: 6}}>
                     <Breadcrumbs
                         aria-label="breadcrumb"
-                        sx={{display: 'flex', alignItems: 'center', mb: 1, mt: 2}}
+                        sx={{display: 'flex', alignItems: 'center', mb: 1}}
                     >
                         <IconButton onClick={() => navigate('/home')}>
                             <HomeIcon/>

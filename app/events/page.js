@@ -18,7 +18,7 @@ export default async function EventsPage () {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Container sx={{mt: 10, mb: 3}}>
+      <Container sx={{mt: 10, mb: 3, pb: 3}}>
 
        <Events/>
 
