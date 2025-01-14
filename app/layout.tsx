@@ -36,7 +36,7 @@ export default async function RootLayout({
         <body className="mb-6 bg-[#fafafa]">
         <Providers currentUser={currentUser}>
             <Box className="flex flex-col">
-                <Navbar isLoggedIn={isLoggedIn}/>
+                <Navbar isLoggedIn={isLoggedIn} currentUser={currentUser} />
                 <Box className={"max-w-[1200px] mx-auto w-full"}>
                     {children}
                 </Box>
