@@ -34,7 +34,7 @@ export default function Events() {
                         aria-label="breadcrumb"
                         sx={{display: 'flex', alignItems: 'center', mb: 1}}
                     >
-                        <IconButton onClick={() => navigate('/home')}>
+                        <IconButton onClick={() => navigate('/')}>
                             <HomeIcon/>
                         </IconButton>
                         <Typography

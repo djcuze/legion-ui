@@ -71,7 +71,7 @@ export default function Network() {
                 aria-label="breadcrumb"
                 sx={{ display: 'flex', alignItems: 'center', mb: 1, mt: 2 }}
             >
-                <IconButton onClick={() => navigate('/home')}>
+                <IconButton onClick={() => navigate('/')}>
                     <HomeIcon/>
                 </IconButton>
                 <Typography
