@@ -3,7 +3,6 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query'
-import { getUpcomingEvents } from './UpcomingEvents'
 import Container from '@mui/material/Container'
 import * as React from 'react'
 import Events from './Events'
@@ -11,10 +10,10 @@ import Events from './Events'
 export default async function EventsPage () {
   const queryClient = new QueryClient()
 
-  await queryClient.prefetchQuery({
-    queryKey: ['upcomingEvents'],
-    queryFn: getUpcomingEvents,
-  })
+  // await queryClient.prefetchQuery({
+  //   queryKey: ['upcomingEvents'],
+  //   queryFn: getUpcomingEvents,
+  // })
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

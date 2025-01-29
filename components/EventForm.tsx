@@ -92,7 +92,11 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${selectedEvent.id}`, {
             method: "PUT",
             headers: headers,
-            body: JSON.stringify({event: params})
+            body: JSON.stringify({event: {
+                    ...formData,
+                    // @ts-ignore
+                    promoter_ids: formData.promoter_ids.map(p => p.value)
+                }})
         }).then(resp => {
             if (!resp.ok) {
                 return resp.json().then(err => {
@@ -110,7 +114,11 @@ export const EventForm = ({selectedEvent, setSelectedEvent}) => {
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events`, {
             method: "POST",
             headers: headers,
-            body: JSON.stringify({event: formData})
+            body: JSON.stringify({event: {
+                ...formData,
+                    // @ts-ignore
+                    promoter_ids: formData.promoter_ids.map(p => p.value)
+                }})
         }).then(resp => {
             if (!resp.ok) {
                 return resp.json().then(err => {

@@ -8,7 +8,7 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import dayjs from "../../utils/dayjs";
 import ListItemText from "@mui/material/ListItemText";
 import {useQuery} from "@tanstack/react-query";
-import {getHeaders} from "../actions";
+import {getHeaders, navigate} from "../actions";
 import Loading from "../../components/Loading";
 import Avatar from "@mui/material/Avatar";
 import * as React from "react";
@@ -23,6 +23,9 @@ import Link from "@mui/material/Link";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import {useState} from "react";
 
 function IconLinks({event}) {
     return (
@@ -189,20 +192,26 @@ function EventListItem({event, setSelectedEvent, scrollToForm}) {
     )
 }
 
-export const getUpcomingEvents = async () => {
-    const headers = await getHeaders()
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events`, {
-        method: 'GET',
-        headers: headers
+export default function UpcomingEvents({setSelectedEvent, scrollToForm}) {
+    const [dateSearchRange, setDateSearchRange] = React.useState({
+        start_time: dayjs().startOf("month"),
+        end_time: dayjs().add(3, 'months').endOf('month')
     })
 
-    return response.json()
-}
+    const getUpcomingEvents = async () => {
+        const headers = await getHeaders()
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/search`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(dateSearchRange),
+        })
 
-export default function UpcomingEvents({setSelectedEvent, scrollToForm}) {
+        return response.json()
+    }
+
     const {data, isFetching} = useQuery({
-        queryKey: ['upcomingEvents'],
-        queryFn: getUpcomingEvents,
+        queryKey: ['upcomingEvents', dateSearchRange],
+        queryFn: getUpcomingEvents
     })
 
     if (isFetching) {
@@ -215,25 +224,71 @@ export default function UpcomingEvents({setSelectedEvent, scrollToForm}) {
 
     const months = Object.keys(data.events)
 
-    return (
-        <Grid container spacing={3} sx={{p: 2}}>
-            {months.map((month, index) => (
-                <Grid key={month} size={{xs: 12, md: 6, lg: 4}}>
-                    <Divider sx={{mb: 1}}>
-                        <Chip color={"info"} label={month}/>
-                    </Divider>
+    function shiftDatePast() {
+        setDateSearchRange(
+            {
+                start_time: dateSearchRange.start_time.subtract(3, 'months').startOf('month'),
+                end_time: dateSearchRange.end_time.subtract(3, 'months').endOf('month')
+            }
+        )
+    }
 
-                    <List sx={{width: '100%'}} dense>
-                        {data.events[month].map(event => (
-                            <EventListItem
-                                key={event.id}
-                                event={event}
-                                scrollToForm={scrollToForm}
-                                setSelectedEvent={setSelectedEvent}/>
-                        ))}
-                    </List>
-                </Grid>
-            ))}
-        </Grid>
+    function shiftDateFuture() {
+        setDateSearchRange(
+            {
+                start_time: dateSearchRange.start_time.add(3, 'months').startOf('month'),
+                end_time: dateSearchRange.end_time.add(3, 'months').endOf('month')
+            }
+        )
+    }
+
+    return (
+        <>
+            <Box sx={{display: "flex", justifyContent: "space-between", p: 1}}>
+                {
+                    data.has_prev ? (
+                        <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+                            <IconButton onClick={shiftDatePast}>
+                                <ArrowCircleLeftIcon/>
+                            </IconButton>
+                            <Typography variant="overline" sx={{mt: 0.5}}>
+                                Prev
+                            </Typography>
+                        </Box>
+                    ) : <Box/>
+                }
+                {
+                    data.has_next ? (
+                        <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+                            <Typography variant="overline" sx={{mt: 0.5}}>
+                                Next
+                            </Typography>
+                            <IconButton onClick={shiftDateFuture}>
+                                <ArrowCircleRightIcon/>
+                            </IconButton>
+                        </Box>
+                    ) : <Box/>
+                }
+            </Box>
+            <Grid container spacing={3} sx={{p: 2}}>
+                {months.map((month, index) => (
+                    <Grid key={month} size={{xs: 12, md: 6, lg: 4}}>
+                        <Divider sx={{mb: 1}}>
+                            <Chip color={"info"} label={month}/>
+                        </Divider>
+
+                        <List sx={{width: '100%'}} dense>
+                            {data.events[month].map(event => (
+                                <EventListItem
+                                    key={event.id}
+                                    event={event}
+                                    scrollToForm={scrollToForm}
+                                    setSelectedEvent={setSelectedEvent}/>
+                            ))}
+                        </List>
+                    </Grid>
+                ))}
+            </Grid>
+        </>
     )
 }

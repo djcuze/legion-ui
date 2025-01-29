@@ -4,5 +4,5 @@
 First, run the development server:
 
 ```bash
-pnpm dev --experimental-https --port 3001
+asdf exec pnpm dev --experimental-https --port 3001
 ```

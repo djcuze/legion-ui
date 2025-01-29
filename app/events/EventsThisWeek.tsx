@@ -1,8 +1,6 @@
 'use client'
 
-import Grid from "@mui/material/Grid2";
 import Typography from "@mui/material/Typography";
-import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import dayjs from "../../utils/dayjs";
@@ -12,15 +10,13 @@ import {getHeaders} from "../actions";
 import Loading from "../../components/Loading";
 import Avatar from "@mui/material/Avatar";
 import * as React from "react";
-import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
-import {IconButton, Tab, Tabs} from "@mui/material";
+import {IconButton} from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import Tooltip from "@mui/material/Tooltip";
 import EditIcon from '@mui/icons-material/Edit';
 import Link from "@mui/material/Link";
-import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import {NoResults} from "../promoters/[id]/EventsList";
