@@ -20,6 +20,7 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import {NoResults} from "../promoters/[id]/EventsList";
+import {getUpcomingEvents} from "./UpcomingEvents";
 
 function IconLinks({event}) {
     return (
@@ -184,20 +185,15 @@ function EventListItem({event, setSelectedEvent, scrollToForm, isVisible = (even
     )
 }
 
-export const getUpcomingEvents = async () => {
-    const headers = await getHeaders()
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events`, {
-        method: 'GET',
-        headers: headers
-    })
-
-    return response.json()
-}
-
 export default function EventsThisWeek({setSelectedEvent, scrollToForm}) {
+    const dateSearchRange = {
+        start_time: dayjs().startOf('week'),
+        end_time: dayjs().endOf('week')
+    }
+
     const {data, isFetching} = useQuery({
         queryKey: ['upcomingEvents'],
-        queryFn: getUpcomingEvents,
+        queryFn: () => getUpcomingEvents(dateSearchRange),
     })
 
     if (isFetching) {
@@ -226,9 +222,14 @@ export default function EventsThisWeek({setSelectedEvent, scrollToForm}) {
 }
 
 export function EventsToday({setSelectedEvent, scrollToForm}) {
+    const dateSearchRange = {
+        start_time: dayjs().startOf('day'),
+        end_time: dayjs().endOf('day')
+    }
+
     const {data, isFetching} = useQuery({
         queryKey: ['upcomingEvents'],
-        queryFn: getUpcomingEvents,
+        queryFn: () => getUpcomingEvents(dateSearchRange),
     })
 
     if (isFetching) {
@@ -260,9 +261,14 @@ export function EventsToday({setSelectedEvent, scrollToForm}) {
 }
 
 export function EventsThisMonth({setSelectedEvent, scrollToForm}) {
+    const dateSearchRange = {
+        start_time: dayjs().startOf('month'),
+        end_time: dayjs().endOf('month')
+    }
+
     const {data, isFetching} = useQuery({
         queryKey: ['upcomingEvents'],
-        queryFn: getUpcomingEvents,
+        queryFn: () => getUpcomingEvents(dateSearchRange),
     })
 
     if (isFetching) {

@@ -26,6 +26,7 @@ import Chip from "@mui/material/Chip";
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import {useState} from "react";
+import {Dayjs} from "dayjs";
 
 function IconLinks({event}) {
     return (
@@ -192,26 +193,26 @@ function EventListItem({event, setSelectedEvent, scrollToForm}) {
     )
 }
 
+export const getUpcomingEvents = async (dateSearchRange: { start_time: Dayjs, end_time: Dayjs }) => {
+    const headers = await getHeaders()
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/search`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(dateSearchRange),
+    })
+
+    return response.json()
+}
+
 export default function UpcomingEvents({setSelectedEvent, scrollToForm}) {
     const [dateSearchRange, setDateSearchRange] = React.useState({
         start_time: dayjs().startOf("month"),
         end_time: dayjs().add(3, 'months').endOf('month')
     })
 
-    const getUpcomingEvents = async () => {
-        const headers = await getHeaders()
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/search`, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(dateSearchRange),
-        })
-
-        return response.json()
-    }
-
     const {data, isFetching} = useQuery({
         queryKey: ['upcomingEvents', dateSearchRange],
-        queryFn: getUpcomingEvents
+        queryFn: () => getUpcomingEvents(dateSearchRange)
     })
 
     if (isFetching) {
