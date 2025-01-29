@@ -183,7 +183,7 @@ function EventListItem({event, setSelectedEvent, scrollToForm}) {
                 </ListItemText>
             </Box>
             {
-                showActions ? (
+                showActions && isVisible ? (
                     <IconButton aria-label="edit" size="small" onClick={handleOnClick} sx={{mr: -1.7}}>
                         <EditIcon fontSize={"inherit"}/>
                     </IconButton>

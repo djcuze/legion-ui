@@ -73,8 +73,10 @@ function IconLinks({event}) {
     )
 }
 
-function EventListItem({event, setSelectedEvent, scrollToForm, isVisible = (event) => true}) {
+function EventListItem({event, setSelectedEvent, scrollToForm}) {
     const [showActions, setShowActions] = React.useState(false)
+
+    const isVisible = dayjs(event.start_time).endOf("day") > dayjs().startOf("day")
 
     const AVATAR_SIZE = () => {
         switch (event.promoters.length) {
@@ -106,7 +108,7 @@ function EventListItem({event, setSelectedEvent, scrollToForm, isVisible = (even
         <ListItem
             onMouseOver={() => setShowActions(true)}
             onMouseLeave={() => setShowActions(false)}
-            sx={{px: 0, alignItems: "flex-start", opacity: isVisible(event) ? 1 : 0.25}}>
+            sx={{px: 0, alignItems: "flex-start", opacity: isVisible ? 1 : 0.25}}>
             <ListItemAvatar sx={{margin: 0, minWidth: "80px"}}>
                 <ListItemText
                     primary={dayjs(event.start_time).format('ddd D MMM')}
@@ -175,7 +177,7 @@ function EventListItem({event, setSelectedEvent, scrollToForm, isVisible = (even
                 </ListItemText>
             </Box>
             {
-                showActions ? (
+                showActions && isVisible ? (
                     <IconButton aria-label="edit" size="small" onClick={handleOnClick}>
                         <EditIcon fontSize={"inherit"}/>
                     </IconButton>
@@ -286,15 +288,13 @@ export function EventsThisMonth({setSelectedEvent, scrollToForm}) {
             // @ts-ignore
             .filter(event => dayjs(event.start_time) >= dayjs().startOf('month') && dayjs(event.start_time) <= dayjs().endOf('month'))
 
-    const isVisible = (event) => dayjs(event.start_time).endOf("day") > dayjs().startOf("day");
-
-
     return (
         <Box sx={{fontSize: "10px", minHeight: "300px", p: 2}}>
-            {events.map(event => <EventListItem scrollToForm={scrollToForm} setSelectedEvent={setSelectedEvent}
-                                                isVisible={isVisible}
-                // @ts-ignore
-                                                event={event} key={event.id}/>)}
+            {events.map(event => (
+                <EventListItem scrollToForm={scrollToForm} setSelectedEvent={setSelectedEvent}
+                    // @ts-ignore
+                    event={event} key={event.id}/>
+            ))}
         </Box>
     )
 }
