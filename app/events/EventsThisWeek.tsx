@@ -194,7 +194,7 @@ export default function EventsThisWeek({setSelectedEvent, scrollToForm}) {
     }
 
     const {data, isFetching} = useQuery({
-        queryKey: ['upcomingEvents'],
+        queryKey: ['upcomingEvents', dateSearchRange],
         queryFn: () => getUpcomingEvents(dateSearchRange),
     })
 
@@ -230,7 +230,7 @@ export function EventsToday({setSelectedEvent, scrollToForm}) {
     }
 
     const {data, isFetching} = useQuery({
-        queryKey: ['upcomingEvents'],
+        queryKey: ['upcomingEvents', dateSearchRange],
         queryFn: () => getUpcomingEvents(dateSearchRange),
     })
 
@@ -269,7 +269,7 @@ export function EventsThisMonth({setSelectedEvent, scrollToForm}) {
     }
 
     const {data, isFetching} = useQuery({
-        queryKey: ['upcomingEvents'],
+        queryKey: ['upcomingEvents', dateSearchRange],
         queryFn: () => getUpcomingEvents(dateSearchRange),
     })
 
